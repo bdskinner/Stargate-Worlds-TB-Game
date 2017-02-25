@@ -1,0 +1,12 @@
+C:\Users\Ben\Documents\CIT 195\Projects\StargateWorlds\StargateWorlds\bin\Debug\StargateWorlds.exe.config
+C:\Users\Ben\Documents\CIT 195\Projects\StargateWorlds\StargateWorlds\obj\Debug\StargateWorlds.csprojResolveAssemblyReference.cache
+Q:\CIT 195\Projects\StargateWorlds\StargateWorlds\bin\Debug\StargateWorlds.exe.config
+Q:\CIT 195\Projects\StargateWorlds\StargateWorlds\obj\Debug\StargateWorlds.csprojResolveAssemblyReference.cache
+Q:\CIT 195\Projects\StargateWorlds\StargateWorlds\bin\Debug\StargateWorlds.exe
+Q:\CIT 195\Projects\StargateWorlds\StargateWorlds\bin\Debug\StargateWorlds.pdb
+Q:\CIT 195\Projects\StargateWorlds\StargateWorlds\obj\Debug\StargateWorlds.exe
+Q:\CIT 195\Projects\StargateWorlds\StargateWorlds\obj\Debug\StargateWorlds.pdb
+C:\Users\Ben\Documents\CIT 195\Projects\StargateWorlds\StargateWorlds\obj\Debug\StargateWorlds.exe
+C:\Users\Ben\Documents\CIT 195\Projects\StargateWorlds\StargateWorlds\obj\Debug\StargateWorlds.pdb
+C:\Users\Ben\Documents\CIT 195\Projects\StargateWorlds\StargateWorlds\bin\Debug\StargateWorlds.exe
+C:\Users\Ben\Documents\CIT 195\Projects\StargateWorlds\StargateWorlds\bin\Debug\StargateWorlds.pdb
