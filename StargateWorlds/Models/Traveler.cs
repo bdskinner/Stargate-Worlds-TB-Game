@@ -15,13 +15,22 @@ namespace StargateWorlds
 
         public enum TravelerHealth
         {
-            None,
-            VeryGood,
-            Good,
-            Moderate,
-            Poor,
-            VeryPoor,
-            Dead
+            None = 0,
+            VeryGood = 6,
+            Good = 5,
+            Moderate = 4,
+            Poor = 3,
+            VeryPoor = 2,
+            Dead = 1
+        }
+
+        public enum HealthChange
+        {
+            MajorInjury = -3,
+            ModerateInjury = -2,
+            MinorInjury = -1,
+            FullHealing = 3,
+            PartialHealing = 2
         }
 
         #endregion
@@ -31,11 +40,13 @@ namespace StargateWorlds
         private string _currentPlanet;
         private int _goldCoins;
         private TravelerHealth _health;
+        private bool _isOnNewWorld;
         private bool _isQuick;
         private string _rank;
-        
+        private Dictionary<string, string> _worldsVisited;
+
         #endregion
-        
+
         #region PROPERTIES
 
         public string CurrentPlanet
@@ -56,6 +67,12 @@ namespace StargateWorlds
             set { _health = value; }
         }
 
+        public bool IsOnNewWorld
+        {
+            get { return _isOnNewWorld; }
+            set { _isOnNewWorld = value; }
+        }
+
         public bool IsQuick
         {
             get { return _isQuick; }
@@ -68,13 +85,21 @@ namespace StargateWorlds
             set { _rank = value; }
         }
 
+        public Dictionary<string, string> WorldsVisited
+        {
+            get { return _worldsVisited; }
+            //set { _worldsVisited = value; }
+        }
+
         #endregion
-        
+
         #region CONSTRUCTORS
 
         public Traveler()
         {
-
+            _health = TravelerHealth.VeryGood;
+            _goldCoins = 10;
+            _worldsVisited = new Dictionary<string, string>();
         }
 
         public Traveler(string rank)
@@ -82,11 +107,27 @@ namespace StargateWorlds
             _rank = rank;
             _health = TravelerHealth.VeryGood;
             _goldCoins = 10;
+            _worldsVisited = new Dictionary<string, string>();
         }
 
         #endregion
 
         #region METHODS
+
+        /// <summary>
+        /// Adds the planet designation and common name to the WorldsVisied dictionary class.
+        /// </summary>
+        /// <param name="planetDesignation"></param>
+        /// <param name="commonName"></param>
+        public void AddVisitedWorld(string planetDesignation, string commonName)
+        {
+            //Check the existing list to see if the world has already been added.
+            if(!_worldsVisited.Keys.Contains(planetDesignation) || _worldsVisited == null)
+            {
+                //Add the values to the list of visited worlds.
+                _worldsVisited.Add(planetDesignation, commonName);
+            }
+        }
 
         public override void Attack()
         {
@@ -96,6 +137,20 @@ namespace StargateWorlds
         public override void Run()
         {
             Console.WriteLine("The traveler is running.");
+        }
+
+        /// <summary>
+        /// Updates the traveler's health based on whether the change presented.
+        /// </summary>
+        /// <param name="healthChange"></param>
+        public void UpdateTravelerHealth(HealthChange healthChange)
+        {
+            //Add the index value of the health change to the traveler's health (Injuries add a negative int, healing = adds a positive int).
+            _health += (int)healthChange;
+
+            //Check the upper and lower bounds of the traveler's health to make sure it is in range.
+            if ((int)_health <= (int)TravelerHealth.Dead) _health = TravelerHealth.Dead;
+            if ((int)_health >= (int)TravelerHealth.VeryGood) _health = TravelerHealth.VeryGood;
         }
 
         public override void Walk()

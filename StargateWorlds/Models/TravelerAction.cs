@@ -20,6 +20,7 @@ namespace StargateWorlds
         PutDownItem,
         PutDownTreasure,
         Travel,
+        TravelerLocationsVisited,
         TravelerInfo,
         TravelerEdit,
         TravelerInventory,
@@ -27,6 +28,7 @@ namespace StargateWorlds
         ListTARDISDestinations,
         ListItems,
         ListTreasures,
+        ListWorlds,
         Exit
     }
 }

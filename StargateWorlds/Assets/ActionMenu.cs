@@ -39,20 +39,12 @@ namespace StargateWorlds
                 {
                     { '1', TravelerAction.TravelerInfo },
                     { '2', TravelerAction.TravelerEdit },
-                    { '3', TravelerAction.Exit }
+                    { '3', TravelerAction.LookAround },
+                    { '4', TravelerAction.Travel },
+                    { '5', TravelerAction.TravelerLocationsVisited },
+                    { '6', TravelerAction.ListWorlds },
+                    { '7', TravelerAction.Exit }
                 }
         };
-
-        //public static Menu ManageTraveler = new Menu()
-        //{
-        //    MenuName = "ManageTraveler",
-        //    MenuTitle = "Manage Traveler",
-        //    MenuChoices = new Dictionary<char, TravelerAction>()
-        //            {
-        //                TravelerAction.MissionSetup,
-        //                TravelerAction.TravelerInfo,
-        //                TravelerAction.Exit
-        //            }
-        //};
     }
 }

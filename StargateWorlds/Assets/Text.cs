@@ -14,53 +14,12 @@ namespace StargateWorlds
         public static List<string> HeaderText = new List<string>() { "Stargate Worlds" };
         public static List<string> FooterText = new List<string>() { "Bird Brain Inernational 2017" };
 
-        #region INTITIAL GAME SETUP
+        #region INTITIAL GAME SETUP         
 
-        public static string MissionIntro()
-        {
-            string messageBoxText =
-            //"You have been hired by the Norlon Corporation to participate " +
-            //"in its latest endeavor, the Aion Project. Your mission is to " +
-            //"test the limits of the new Aion Engine and report back to " +
-            //"the Norlon Corporation.\n" +
-            //" \n" +
-            //"Press the Esc key to exit the game at any point.\n" +
-            //" \n" +
-            //"Your mission begins now.\n" +
-            //" \n" +
-            //"\tYour first task will be to set up the initial parameters of your mission.\n" +
-            //" \n" +
-            //"\tPress any key to begin the Mission Initialization Process.\n";
-
-            "You are a member of SG-1, a team of AirForce officers who travel to other worlds through a\n" +
-            "device called a Stargate.  While scouting a location for a new off-world base on a newly\n" +
-            "visited world you uncover evidence that a System Lord named Ra is planning on sending an\n" +
-            "advanced bomb to Earth through the Stargate.  Your mission, acquire enough of a metal\n" +
-            "called Trinium to construct a barrier for the Stargate to stop the bomb from reaching \n" +
-            "Earth.\n" +
-            " \n" +
-            "Press the Esc key to exit the game at any point.\n" +
-            " \n" +
-            "Your mission begins now.\n" +
-            " \n" +
-            "\tYour first task will be to set up the initial parameters of your mission.\n" +
-            " \n" +
-            "\tPress any key to begin the Mission Initialization Process.\n";
-
-            return messageBoxText;
-        }
-
-        public static string ClosingScreen()
-        {
-            string messageBoxText =
-            "Thank you for playing Stargate Worlds by Bird Brain International.\n" +
-            "Visit www.birdbrain.com for upcoming games\n" +
-            " \n" +
-            "Press any key to exit\n";
-
-            return messageBoxText;
-        }
-
+        /// <summary>
+        /// Displays information about the initial location the traveler begins the game from.
+        /// </summary>
+        /// <returns></returns>
         public static string CurrrentLocationInfo()
         {
             string messageBoxText =
@@ -78,6 +37,31 @@ namespace StargateWorlds
             "leaders of that planet to acquire the Trinium necessary for Earth's defense.\n" +
             " \n" +
             "\tChoose from the menu options to proceed.\n";
+
+            return messageBoxText;
+        }
+
+        /// <summary>
+        /// Displays the initial description of the mission.
+        /// </summary>
+        /// <returns></returns>
+        public static string MissionIntro()
+        {
+            string messageBoxText =
+            "You are a member of SG-1, a team of AirForce officers who travel to other worlds through a\n" +
+            "device called a Stargate.  While scouting a location for a new off-world base on a newly\n" +
+            "visited world you uncover evidence that a System Lord named Ra is planning on sending an\n" +
+            "advanced bomb to Earth through the Stargate.  Your mission, acquire enough of a metal\n" +
+            "called Trinium to construct a barrier for the Stargate to stop the bomb from reaching \n" +
+            "Earth.\n" +
+            " \n" +
+            "Press the Esc key to exit the game at any point.\n" +
+            " \n" +
+            "Your mission begins now.\n" +
+            " \n" +
+            "\tYour first task will be to set up the initial parameters of your mission.\n" +
+            " \n" +
+            "\tPress any key to begin the Mission Initialization Process.\n";
 
             return messageBoxText;
         }
@@ -161,6 +145,8 @@ namespace StargateWorlds
             return messageBoxText;
         }
 
+       
+
         //public static string InitializeMissionGetTravelerRace(Traveler gameTraveler)
         //{
         //    string messageBoxText =
@@ -239,6 +225,144 @@ namespace StargateWorlds
 
         #region MAIN MENU ACTION SCREENS
 
+        /// <summary>
+        /// Displays the closing message in the Message Box area of the screen.
+        /// </summary>
+        /// <returns></returns>
+        public static string ClosingScreen()
+        {
+            string messageBoxText =
+            "Thank you for playing Stargate Worlds by Bird Brain International.\n" +
+            "Visit www.birdbrain.com for upcoming games\n" +
+            " \n" +
+            "Press any key to exit\n";
+
+            return messageBoxText;
+        }
+
+        /// <summary>
+        /// Returns a list of all worlds that are in stargate network.
+        /// </summary>
+        /// <param name="gameUniverse"></param>
+        /// <param name="gameTraveler"></param>
+        /// <returns></returns>
+        public static string DisplayWorlds(Universe gameUniverse, Traveler gameTraveler, bool displayCurrenLocation)
+        {
+            //Variable Declarations.
+            string heightList = null;
+            string messageBoxText = "";
+
+            //Add the headings to the message text.
+            messageBoxText += "Planet Designation \t\t Planet \n " +
+                " \n";
+
+            //Add the worlds to the message text.
+            foreach (World location in gameUniverse.Worlds)
+            {
+                if (displayCurrenLocation == true)
+                {
+                    //Display the traveler's current world as part of the list.
+                    heightList += $"{location.PlanetDesignation} \t\t\t {location.CommonName} \n";
+                }
+                else
+                {
+                    //Do not display the traveler's current world as part of the list.
+                    if (gameTraveler.CurrentPlanet != location.PlanetDesignation)
+                    {
+                        heightList += $"{location.PlanetDesignation} \t\t\t {location.CommonName} \n";
+                    }
+                }
+            }
+
+            messageBoxText += heightList;
+
+            //Return the list of worlds.
+            return messageBoxText;
+        }
+
+        /// <summary>
+        /// Returns a list of all worlds that the traveler has visited during the game.
+        /// </summary>
+        /// <param name="gameUniverse"></param>
+        /// <param name="gameTraveler"></param>
+        /// <returns></returns>
+        public static string DisplayWorldsTraveled(Universe gameUniverse, Traveler gameTraveler)
+        {
+            //Variable Declarations.
+            string worldList = null;
+            string messageBoxText = "";
+
+            //Add the headings to the message text.
+            messageBoxText += "Planet Designation \t\t Planet \n " +
+                " \n";
+
+            //if(gameTraveler.WorldsVisited != null)
+            if (gameTraveler.WorldsVisited.Count > 0)
+            {
+                //Build the list of worlds visited.
+                foreach (KeyValuePair<string, string> location in gameTraveler.WorldsVisited)
+                {
+                    worldList += $"{location.Key.ToString()} \t\t\t {location.Value.ToString()} \n";
+                }
+            }
+            else
+            {
+                //Add a message that no worlds have been visited.
+                worldList += $"No Worlds Visited";
+            }
+
+            //Add the list of worlds to the message text.
+            messageBoxText += worldList;
+
+            //Return the list of worlds.
+            return messageBoxText;
+        }
+
+        /// <summary>
+        /// Returns the name and description of the current world the player is on.
+        /// </summary>
+        /// <param name="world"></param>
+        /// <returns></returns>
+        public static string LookAround(World world)
+        {
+            string messageBoxText =
+                $"Current Location: {world.CommonName}\n" +
+                " \n" +
+                world.Description  +
+                " \n" +
+                world.GeneralContents;
+
+            return messageBoxText;
+        }
+        
+        /// <summary>
+        /// Displays the stats of the traveler in the Status Box area of the screen.
+        /// </summary>
+        /// <param name="traveler"></param>
+        /// <param name="universe"></param>
+        /// <returns></returns>
+        public static List<string> StatusBox(Traveler traveler, Universe universe)
+        {
+            List<string> statusBoxText = new List<string>();
+
+            //statusBoxText.Add($"Experience Points: {traveler.ExperiencePoints}\n");
+            //statusBoxText.Add($"Health: {traveler.Health}\n");
+
+            statusBoxText.Add($"Health: {ConsoleWindowHelper.ToLabelFormat(traveler.Health.ToString())}\n");
+            statusBoxText.Add($"Gold Coins: {traveler.GoldCoins}\n");
+
+            //statusBoxText.Add($"Lives: {traveler.Lives}\n");
+
+
+
+            return statusBoxText;
+        }
+
+        /// <summary>
+        /// Displays the Traveler's information.
+        /// </summary>
+        /// <param name="gameTraveler"></param>
+        /// <returns></returns>
         public static string TravelerInfo(Traveler gameTraveler)
         {
             string messageBoxText =
@@ -257,29 +381,45 @@ namespace StargateWorlds
             return messageBoxText;
         }
 
-        //public static string Travel(int currentSpaceTimeLocationId, List<SpaceTimeLocation> spaceTimeLocations)
-        //{
-        //    string messageBoxText =
-        //        $"{gameTraveler.Name}, Aion Base will need to know the name of the new location.\n" +
-        //        " \n" +
-        //        "Enter the ID number of your desired location from the table below.\n" +
-        //        " \n";
+        /// <summary>
+        /// Displays text in the Message Box area of the screen prompting the player to enter the world
+        /// they want to travel to and displays a list of all worlds in the universe.
+        /// </summary>
+        /// <param name="gameUniverse"></param>
+        /// <returns></returns>
+        public static string TravelToWorld(Universe gameUniverse, Traveler gameTraveler)
+        {
+            string messageBoxText =
+                $"What world would you like to travel to? \n" +
+                " \n" +
+                "Please enter the number of one of the worlds below: \n" +
+                " \n";
 
+            //Add the list of worlds to the message box text.
+            messageBoxText += DisplayWorlds(gameUniverse, gameTraveler, false);
 
-        //    string spaceTimeLocationList = null;
+            //Return the text to display in the Message area of the screen.
+            return messageBoxText;
+        }
 
-        //    foreach (SpaceTimeLocation spaceTimeLocation in spaceTimeLocations)
-        //    {
-        //        if (race != Character.RaceType.None)
-        //        {
-        //            raceList += $"\t{race}\n";
-        //        }
-        //    }
+        /// <summary>
+        /// Displays a list of the worlds the traveler has visited during the game in the Message Box area of the screen.
+        /// </summary>
+        /// <param name="gameUniverse"></param>
+        /// <param name="gameTraveler"></param>
+        /// <returns></returns>
+        public static string WorldsVisited(Universe gameUniverse, Traveler gameTraveler)
+        {
+            string messageBoxText =
+                $"Belowe is a list of the worlds you have visited: \n" +
+                " \n";
 
-        //    messageBoxText += raceList;
+            //Add the list of worlds to the message box text.
+            messageBoxText += DisplayWorldsTraveled(gameUniverse, gameTraveler);
 
-        //    return messageBoxText;
-        //}
+            //Return the text to display in the Message area of the screen.
+            return messageBoxText;
+        }        
 
         #endregion
     }

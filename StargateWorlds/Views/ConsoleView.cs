@@ -11,12 +11,25 @@ namespace StargateWorlds
     /// </summary>
     public class ConsoleView
     {
+        #region ENUMS
+
+        private enum ViewStatus
+        {
+            TravelerInitialization,
+            PlayingGame
+        }
+
+        #endregion
+
         #region FIELDS
 
         //
         // declare game objects for the ConsoleView object to use
         //
         Traveler _gameTraveler;
+        Universe _gameUniverse;
+
+        ViewStatus _viewStatus;
 
         #endregion
 
@@ -29,9 +42,10 @@ namespace StargateWorlds
         /// <summary>
         /// default constructor to create the console view objects
         /// </summary>
-        public ConsoleView(Traveler gameTraveler)
+        public ConsoleView(Traveler gameTraveler, Universe gameUniverse)
         {
             _gameTraveler = gameTraveler;
+            _gameUniverse = gameUniverse;
 
             InitializeDisplay();
         }
@@ -39,6 +53,7 @@ namespace StargateWorlds
         #endregion
 
         #region METHODS
+
         /// <summary>
         /// display all of the elements on the game play screen on the console
         /// </summary>
@@ -61,6 +76,47 @@ namespace StargateWorlds
             DisplayMessageBox(messageBoxHeaderText, messageBoxText);
             DisplayMenuBox(menu);
             DisplayInputBox();
+            DisplayStatusBox();
+        }
+
+        /// <summary>
+        /// Gets the world the player would like to go to next.
+        /// </summary>
+        public string GetWorldToTravelTo()
+        {
+            //Display the list of worlds.
+            DisplayGamePlayScreen("Travel to World", Text.TravelToWorld(_gameUniverse, _gameTraveler), ActionMenu.MainMenu, "");
+            DisplayInputBoxPrompt($"Enter Number for World: ");
+
+            //Get the planet designation of the world the player wants to travel to.
+            //GetInteger("Enter Number of World: ", 1, _gameUniverse.Worlds.Count, out worldChoice);
+            DisplayInputBoxPrompt("Enter the Designation: ");
+            
+            //Return the planet designation of the world choosen by the user.
+            return GetString();
+        }
+
+        /// <summary>
+        /// Displays a list of worlds that the traveler has visited in the Message Box area of the screen.
+        /// </summary>
+        /// <returns></returns>
+        public void DisplayWorldsVisited()
+        {
+            //Display the list of worlds.
+            DisplayGamePlayScreen("Worlds Visited", Text.WorldsVisited(_gameUniverse, _gameTraveler), ActionMenu.MainMenu, "");
+            //DisplayInputBoxPrompt($"Enter Number for World: ");
+
+            //Get the planet designation of the world the player wants to travel to.
+            //GetInteger("Enter Number of World: ", 1, _gameUniverse.Worlds.Count, out worldChoice);
+            //DisplayInputBoxPrompt("Enter the Designation: ");
+        }
+
+        /// <summary>
+        /// Displays a list of all worlds in the Message Box are of the screen.
+        /// </summary>
+        public void DislayListOfWorlds()
+        {
+            DisplayGamePlayScreen("List of Worlds", Text.DisplayWorlds(_gameUniverse, _gameTraveler, true), ActionMenu.MainMenu, "");
         }
 
         /// <summary>
@@ -77,23 +133,26 @@ namespace StargateWorlds
         /// <returns>action menu choice</returns>
         public TravelerAction GetActionMenuChoice(Menu menu)
         {
+            //Variable Declarations.
             TravelerAction choosenAction = TravelerAction.None;
+            Console.CursorVisible = false;
 
-            ConsoleKeyInfo keyPressedInfo = Console.ReadKey();
-            char keyPressed = keyPressedInfo.KeyChar;
-            //choosenAction = menu.MenuChoices[keyPressed];
+            //Create an array of valid keys from the menu dictionary.
+            char[] validKeys = menu.MenuChoices.Keys.ToArray();
 
-            switch (keyPressed)
+            //Validate key pressed as in MenuChoices dictionary.
+            char keyPressed;
+            do
             {
-                case '1':
-                case '2':
-                case '3':
-                    choosenAction = menu.MenuChoices[keyPressed];
-                    break;
-                default:
-                    break;
-            }
-            
+                ConsoleKeyInfo KeyPressedInfo = Console.ReadKey(true);
+                keyPressed = KeyPressedInfo.KeyChar;
+            } while (!validKeys.Contains(keyPressed));
+
+            //Get the menu choice based on the valid option entered by the player.
+            choosenAction = menu.MenuChoices[keyPressed];
+            Console.CursorVisible = true;
+
+            //Return the menu choice.
             return choosenAction;
         }
 
@@ -187,18 +246,7 @@ namespace StargateWorlds
 
 
             Console.SetCursorPosition(0, 10);
-            string tabSpace = new String(' ', 35);
-            //Console.WriteLine(tabSpace + @" _____ _              ___  _               ______          _           _   ");
-            //Console.WriteLine(tabSpace + @"|_   _| |            / _ \(_)              | ___ \        (_)         | |  ");
-            //Console.WriteLine(tabSpace + @"  | | | |__   ___   / /_\ \_  ___  _ __    | |_/ _ __ ___  _  ___  ___| |_ ");
-            //Console.WriteLine(tabSpace + @"  | | | '_ \ / _ \  |  _  | |/ _ \| '_ \   |  __| '__/ _ \| |/ _ \/ __| __|");
-            //Console.WriteLine(tabSpace + @"  | | | | | |  __/  | | | | | (_) | | | |  | |  | | | (_) | |  __| (__| |_ ");
-            //Console.WriteLine(tabSpace + @"  \_/ |_| |_|\___|  \_| |_|_|\___/|_| |_|  \_|  |_|  \___/| |\___|\___|\__|");
-            //Console.WriteLine(tabSpace + @"                                                         _/ |              ");
-            //Console.WriteLine(tabSpace + @"                                                        |__/             ");
-
-
-
+            string tabSpace = new String(' ', 35);           
             Console.WriteLine(tabSpace + @"  _________ __                             __              __      __            .__       .___     ");
             Console.WriteLine(tabSpace + @" /   _____//  |______ _______  _________ _/  |_  ____     /  \    /  \___________|  |    __| _/______");
             Console.WriteLine(tabSpace + @" \_____  \\   __\__  \\_  __ \/ ___\__  \\   __\/ __ \    \   \/\/   /  _ \_  __ \  |   / __ |/  ___/");
@@ -217,6 +265,66 @@ namespace StargateWorlds
             }
 
             return playing;
+        }
+
+        /// <summary>
+        /// Clears the text from the Status Box area of the screen.
+        /// </summary>
+        public void ClearStatusBox()
+        {
+            Console.BackgroundColor = ConsoleTheme.InputBoxBackgroundColor;
+            Console.ForegroundColor = ConsoleTheme.InputBoxBorderColor;
+
+            //
+            // display the outline for the status box
+            //
+            ConsoleWindowHelper.DisplayBoxOutline(
+                ConsoleLayout.StatusBoxPositionTop,
+                ConsoleLayout.StatusBoxPositionLeft,
+                ConsoleLayout.StatusBoxWidth,
+                ConsoleLayout.StatusBoxHeight);
+
+            //
+            // display the text for the status box if playing game
+            //
+            if (_viewStatus == ViewStatus.PlayingGame)
+            {
+                //
+                // display status box header with title
+                //
+                Console.BackgroundColor = ConsoleTheme.StatusBoxBorderColor;
+                Console.ForegroundColor = ConsoleTheme.StatusBoxForegroundColor;
+                Console.SetCursorPosition(ConsoleLayout.StatusBoxPositionLeft + 2, ConsoleLayout.StatusBoxPositionTop + 1);
+                Console.Write(ConsoleWindowHelper.Center("Game Stats", ConsoleLayout.StatusBoxWidth - 4));
+                Console.BackgroundColor = ConsoleTheme.StatusBoxBackgroundColor;
+                Console.ForegroundColor = ConsoleTheme.StatusBoxForegroundColor;
+
+                //
+                // clear the status box
+                //
+                Console.ForegroundColor = ConsoleTheme.StatusBoxBackgroundColor;
+                int startingRow = ConsoleLayout.StatusBoxPositionTop + 3;
+                int row = startingRow;
+                foreach (string statusTextLine in Text.StatusBox(_gameTraveler, _gameUniverse))
+                {
+                    Console.SetCursorPosition(ConsoleLayout.StatusBoxPositionLeft + 3, row);
+                    Console.Write(statusTextLine);
+                    row++;
+                }
+                Console.ForegroundColor = ConsoleTheme.StatusBoxForegroundColor;
+            }
+            else
+            {
+                //
+                // display status box header without header
+                //
+                Console.BackgroundColor = ConsoleTheme.StatusBoxBorderColor;
+                Console.ForegroundColor = ConsoleTheme.StatusBoxForegroundColor;
+                Console.SetCursorPosition(ConsoleLayout.StatusBoxPositionLeft + 2, ConsoleLayout.StatusBoxPositionTop + 1);
+                Console.Write(ConsoleWindowHelper.Center("", ConsoleLayout.StatusBoxWidth - 4));
+                Console.BackgroundColor = ConsoleTheme.StatusBoxBackgroundColor;
+                Console.ForegroundColor = ConsoleTheme.StatusBoxForegroundColor;
+            }
         }
 
         /// <summary>
@@ -371,6 +479,76 @@ namespace StargateWorlds
         }
 
         /// <summary>
+        /// Displays a description of the player's current location on the screen.
+        /// </summary>
+        public void DisplayLookAround()
+        {
+            //SpaceTimeLocation currentSpaceTimeLocation = _gameUniverse.GetSpaceTimeLocationByID(_gameTraveler.SpaceTimeLocationID);
+            //DisplayGamePlayScreen("Current Location", Text.LookAround(currentSpaceTimeLocation), ActionMenu.MainMenu, "");
+
+            World currentWorld = _gameUniverse.GetWorldByID(_gameTraveler.CurrentPlanet);
+            DisplayGamePlayScreen("Current Location", Text.LookAround(currentWorld), ActionMenu.MainMenu, "");
+        }
+
+        /// <summary>
+        /// draw the status box on the game screen
+        /// </summary>
+        public void DisplayStatusBox()
+        {
+            Console.BackgroundColor = ConsoleTheme.InputBoxBackgroundColor;
+            Console.ForegroundColor = ConsoleTheme.InputBoxBorderColor;
+
+            //
+            // display the outline for the status box
+            //
+            ConsoleWindowHelper.DisplayBoxOutline(
+                ConsoleLayout.StatusBoxPositionTop,
+                ConsoleLayout.StatusBoxPositionLeft,
+                ConsoleLayout.StatusBoxWidth,
+                ConsoleLayout.StatusBoxHeight);
+
+            //
+            // display the text for the status box if playing game
+            //
+            if (_viewStatus == ViewStatus.PlayingGame)
+            {
+                //
+                // display status box header with title
+                //
+                Console.BackgroundColor = ConsoleTheme.StatusBoxBorderColor;
+                Console.ForegroundColor = ConsoleTheme.StatusBoxForegroundColor;
+                Console.SetCursorPosition(ConsoleLayout.StatusBoxPositionLeft + 2, ConsoleLayout.StatusBoxPositionTop + 1);
+                Console.Write(ConsoleWindowHelper.Center("Game Stats", ConsoleLayout.StatusBoxWidth - 4));
+                Console.BackgroundColor = ConsoleTheme.StatusBoxBackgroundColor;
+                Console.ForegroundColor = ConsoleTheme.StatusBoxForegroundColor;                
+
+                //
+                // display stats
+                //
+                int startingRow = ConsoleLayout.StatusBoxPositionTop + 3;
+                int row = startingRow;
+                foreach (string statusTextLine in Text.StatusBox(_gameTraveler, _gameUniverse))
+                {
+                    Console.SetCursorPosition(ConsoleLayout.StatusBoxPositionLeft + 3, row);
+                    Console.Write(statusTextLine);
+                    row++;
+                }
+            }
+            else
+            {
+                //
+                // display status box header without header
+                //
+                Console.BackgroundColor = ConsoleTheme.StatusBoxBorderColor;
+                Console.ForegroundColor = ConsoleTheme.StatusBoxForegroundColor;
+                Console.SetCursorPosition(ConsoleLayout.StatusBoxPositionLeft + 2, ConsoleLayout.StatusBoxPositionTop + 1);
+                Console.Write(ConsoleWindowHelper.Center("", ConsoleLayout.StatusBoxWidth - 4));
+                Console.BackgroundColor = ConsoleTheme.StatusBoxBackgroundColor;
+                Console.ForegroundColor = ConsoleTheme.StatusBoxForegroundColor;
+            }
+        }        
+
+        /// <summary>
         /// clear the input box
         /// </summary>
         private void ClearInputBox()
@@ -453,6 +631,9 @@ namespace StargateWorlds
             else
                 traveler.IsQuick = false;
 
+            //Set the traveler's current planet (Earth).
+            traveler.CurrentPlanet = "P2X-3YZ";
+
 
 
             ////
@@ -468,12 +649,18 @@ namespace StargateWorlds
             DisplayGamePlayScreen("Mission Initialization - Complete", Text.InitializeMissionEchoTravelerInfo(traveler), ActionMenu.MissionIntro, "");
             GetContinueKey();
 
+            _viewStatus = ViewStatus.PlayingGame;
+
             return traveler;
         }
 
+        /// <summary>
+        /// Displays a closing message on the screen.
+        /// </summary>
         public void DisplayClosingScreen()
         {
             //Display a closing message on the screen.
+            _viewStatus = ViewStatus.TravelerInitialization;
             DisplayGamePlayScreen("Exit Game", Text.ClosingScreen(), ActionMenu.MissionIntro, "");
             GetContinueKey();
         }
