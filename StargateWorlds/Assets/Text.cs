@@ -238,7 +238,7 @@ namespace StargateWorlds
             "Press any key to exit\n";
 
             return messageBoxText;
-        }
+        }        
 
         /// <summary>
         /// Returns a list of all worlds that are in stargate network.
@@ -316,6 +316,171 @@ namespace StargateWorlds
 
             //Return the list of worlds.
             return messageBoxText;
+        }
+
+        /// <summary>
+        /// Returns a list of all game objects.
+        /// </summary>
+        /// <param name="gameObjects"></param>
+        /// <returns></returns>
+        public static string GetAllGameObjects(List<GameObject> gameObjects)
+        {
+            //Variable Declarations.
+            string messageText = "";
+            string gameObjectList = "";
+            int ID_PAD = 5;
+            int NAME_PAD = 50;
+            int PLANET_PAD = 10;
+
+            //Setup the table headers and column names.
+            messageText =
+                "Game Objects \n \n" +
+                "ID".PadRight(ID_PAD) +
+                "Name".PadRight(NAME_PAD) +
+                "Plant Designation".PadRight(PLANET_PAD) + " \n" +
+                "---".PadRight(ID_PAD) +
+                "----------------------".PadRight(NAME_PAD) +
+                "----------------------".PadRight(PLANET_PAD) + " \n";
+
+            //Setup the list of game objects.
+            gameObjectList = null;
+            foreach (GameObject gameobject in gameObjects)
+            {
+                gameObjectList += $"{gameobject.ItemID}".PadRight(ID_PAD) +
+                    $"{gameobject.ItemName}".PadRight(NAME_PAD) +
+                    $"{gameobject.PlanetDesignation}".PadRight(PLANET_PAD) +
+                    " \n";
+            }
+
+            messageText += gameObjectList;
+
+            //Return a list of the game objects with their ID, Name, and Location.
+            return messageText;
+        }
+
+        /// <summary>
+        /// Gets a formated list of all the game objects in the traveler's inventory.
+        /// </summary>
+        /// <param name="travelerInventory"></param>
+        /// <returns></returns>
+        public static string GetCurrentInventory(List<TravelerObject> travelerInventory)
+        {
+            //Variable Declarations.
+            string messageText = "";
+            string inventoryObjectList = "";
+            int ID_PAD = 5;
+            int NAME_PAD = 50;
+            int CATEGORY_PAD = 10;
+
+            //Setup the table headers and column names.
+            messageText =
+                " \nTraveler Inventory \n \n" +
+                "ID".PadRight(ID_PAD) +
+                "Name".PadRight(NAME_PAD) +
+                "Object Category".PadRight(CATEGORY_PAD) + " \n" +
+                "---".PadRight(ID_PAD) +
+                "----------------------".PadRight(NAME_PAD) +
+                "----------------------".PadRight(CATEGORY_PAD) + " \n";
+
+            //Check to see if the traveler's inventory has any game objects.
+            if(travelerInventory.Count > 0)
+            {
+                //If the traveler's inventory contains one or more game objects...
+
+                //Setup the list of game objects.
+                inventoryObjectList = null;
+                foreach (TravelerObject inventoryObject in travelerInventory)
+                {
+                    inventoryObjectList += $"{inventoryObject.ItemID}".PadRight(ID_PAD) +
+                        $"{inventoryObject.ItemName}".PadRight(NAME_PAD) +
+                        $"{inventoryObject.ItemType}".PadRight(CATEGORY_PAD) +
+                        " \n";
+                }
+
+                messageText += inventoryObjectList;
+            }
+            else
+            {
+                //If the traveler's inventory contains no game objects...
+
+                messageText += " \nNo Game Objects in Inventory";
+            }
+
+            //Return a list of the game objects with their ID, Name, and Location.
+            return messageText;
+        }
+
+        /// <summary>
+        /// Returns the game objects for a specific world.
+        /// </summary>
+        /// <param name="gameObjects"></param>
+        /// <returns></returns>
+        public static string GetWorldGameObjects(List<GameObject> gameObjects)
+        {
+            //Variable Declarations.
+            string gameObjectList = "";
+            int ID_PAD = 5;
+            string messageText = "";
+            int NAME_PAD = 50;
+            int PLANET_PAD = 10;
+            TravelerObject travelerObject;
+
+            //Setup the table headers and column names.
+            messageText =
+                " \nGame Objects \n \n" +
+                "ID".PadRight(ID_PAD) +
+                "Name".PadRight(NAME_PAD) +
+                "Object Type".PadRight(PLANET_PAD) + " \n" +
+                "---".PadRight(ID_PAD) +
+                "----------------------".PadRight(NAME_PAD) +
+                "----------------------".PadRight(PLANET_PAD) + " \n";
+
+            //Check the number of objects for the player's current world.
+            if (gameObjects.Count > 0)
+            {
+                //One or more objects for the current world...
+
+                //Setup the list of game objects.
+                gameObjectList = null;
+                foreach (GameObject gameobject in gameObjects)
+                {                    
+                    travelerObject = gameobject as TravelerObject;
+                    gameObjectList += $"{travelerObject.ItemID}".PadRight(ID_PAD) +
+                        $"{travelerObject.ItemName}".PadRight(NAME_PAD) +
+                        $"{travelerObject.ItemType}".PadRight(PLANET_PAD) +
+                        " \n";
+                }
+            }
+            else
+            {
+                //No objects for the current world...
+                gameObjectList += " \nNo Game Objects Present";
+            }
+
+            messageText += gameObjectList;
+
+            //Return a list of the game objects with their ID, Name, and Location.
+            return messageText;
+        }
+
+        /// <summary>
+        /// Returns the information for a specific game object.
+        /// </summary>
+        /// <param name="travelerObject"></param>
+        /// <returns></returns>
+        public static string GetGameObjectDetail(TravelerObject travelerObject)
+        {
+            //Variable Declarations.
+            string messageText = "";
+
+            messageText = 
+                $"{travelerObject.ItemName} \n \n" +
+                $"{travelerObject.Description} \n \n" +
+                $"The {travelerObject.ItemName} has a value of {travelerObject.Value} and is in the {travelerObject.ItemType} category.";
+                
+
+            //Return the object's information.
+            return messageText;
         }
 
         /// <summary>

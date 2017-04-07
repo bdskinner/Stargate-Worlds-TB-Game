@@ -37,14 +37,63 @@ namespace StargateWorlds
             MenuTitle = "Main Menu",
             MenuChoices = new Dictionary<char, TravelerAction>()
                 {
-                    { '1', TravelerAction.TravelerInfo },
-                    { '2', TravelerAction.TravelerEdit },
-                    { '3', TravelerAction.LookAround },
-                    { '4', TravelerAction.Travel },
-                    { '5', TravelerAction.TravelerLocationsVisited },
-                    { '6', TravelerAction.ListWorlds },
-                    { '7', TravelerAction.Exit }
+                    { '1', TravelerAction.AdminMenu },
+                    { '2', TravelerAction.TravelMenu },
+                    { '3', TravelerAction.InventoryMenu },
+                    { '4', TravelerAction.Exit }
                 }
         };
+
+        public static Menu AdminMenu = new Menu()
+        {
+            MenuName = "AdminMenu",
+            MenuTitle = "Admin Menu",
+            MenuChoices = new Dictionary<char, TravelerAction>()
+                {
+                    { '1', TravelerAction.TravelerInfo },
+                    { '2', TravelerAction.TravelerEdit },
+                    { '3', TravelerAction.ListWorlds },
+                    { '4', TravelerAction.TravelerLocationsVisited },
+                    { '5', TravelerAction.ListGameObjects },
+                    { '6', TravelerAction.ReturnToMainMenu }
+                }
+        };
+
+        public static Menu InventoryMenu = new Menu()
+        {
+            MenuName = "InventoryMenu",
+            MenuTitle = "Inventory Menu",
+            MenuChoices = new Dictionary<char, TravelerAction>()
+                {
+                    { '1', TravelerAction.DisplayInventory },
+                    { '2', TravelerAction.PickUpObject },
+                    { '3', TravelerAction.PutDownObject },
+                    { '4', TravelerAction.LookAtObject },
+                    { '5', TravelerAction.ReturnToMainMenu }
+                }
+        };
+
+        public static Menu TravelMenu = new Menu()
+        {
+            MenuName = "TravelMenu",
+            MenuTitle = "Travel Menu",
+            MenuChoices = new Dictionary<char, TravelerAction>()
+                {
+                    { '1', TravelerAction.Travel },
+                    { '2', TravelerAction.LookAround },
+                    { '3', TravelerAction.ReturnToMainMenu }
+                }
+        };
+
+        public enum CurrentMenu
+        {
+            AdminMenu,
+            InventoryMenu,
+            MainMenu,
+            TravelMenu,
+            InitializeMission
+        }
+
+        public static CurrentMenu currentMenu = CurrentMenu.MainMenu;
     }
 }

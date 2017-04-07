@@ -115,31 +115,80 @@ namespace StargateWorlds
             while (_playingGame)
             {
                 //Process all flags, events, and stats.
-                UpdateTravelerStats();
+                UpdateTravelerStats();   
 
-                //Variable Declarations.
-                travelerActionChoice = _gameConsoleView.GetActionMenuChoice(ActionMenu.MainMenu);
+                //Get the player's menu choice.
+                //travelerActionChoice = _gameConsoleView.GetActionMenuChoice(ActionMenu.MainMenu);
+                if (ActionMenu.currentMenu == ActionMenu.CurrentMenu.MainMenu)
+                {
+                    //travelerActionChoice = _gameConsoleView.GetActionMenuChoice(ActionMenu.MainMenu);
+                    if (_gameTraveler.Health == Traveler.TravelerHealth.Dead)
+                        travelerActionChoice = _gameConsoleView.GetActionMenuChoice(ActionMenu.InitializeMission);
+                    else
+                        travelerActionChoice = _gameConsoleView.GetActionMenuChoice(ActionMenu.MainMenu);
+                }
+                else if(ActionMenu.currentMenu == ActionMenu.CurrentMenu.AdminMenu)
+                {
+                    //travelerActionChoice = _gameConsoleView.GetActionMenuChoice(ActionMenu.AdminMenu);
+                    if (_gameTraveler.Health == Traveler.TravelerHealth.Dead)
+                        travelerActionChoice = _gameConsoleView.GetActionMenuChoice(ActionMenu.InitializeMission);
+                    else
+                        travelerActionChoice = _gameConsoleView.GetActionMenuChoice(ActionMenu.AdminMenu);
+                }
+                else if (ActionMenu.currentMenu == ActionMenu.CurrentMenu.TravelMenu)
+                {
+                    //travelerActionChoice = _gameConsoleView.GetActionMenuChoice(ActionMenu.TravelMenu);
+                    if (_gameTraveler.Health == Traveler.TravelerHealth.Dead)
+                        travelerActionChoice = _gameConsoleView.GetActionMenuChoice(ActionMenu.InitializeMission);
+                    else
+                        travelerActionChoice = _gameConsoleView.GetActionMenuChoice(ActionMenu.TravelMenu);
+                }
+                else if (ActionMenu.currentMenu == ActionMenu.CurrentMenu.InventoryMenu)
+                {
+                    //travelerActionChoice = _gameConsoleView.GetActionMenuChoice(ActionMenu.InventoryMenu);
+                    if (_gameTraveler.Health == Traveler.TravelerHealth.Dead)
+                        travelerActionChoice = _gameConsoleView.GetActionMenuChoice(ActionMenu.InitializeMission);
+                    else
+                        travelerActionChoice = _gameConsoleView.GetActionMenuChoice(ActionMenu.InventoryMenu);
+                }
 
                 //Choose an action based on the user's menu choice.
                 switch (travelerActionChoice)
                 {
-                    case TravelerAction.None:
+                    case TravelerAction.DisplayInventory:
+                        //Displays the traveler's current inventory in the Message Box are of the screen.
+                        _gameConsoleView.DisplayTravelerInventory();
                         break;
-
-                    case TravelerAction.TravelerInfo:
-                        //Display the traveler's information in the Message Box area of the screen.
-                        _gameConsoleView.DisplayTravelerInfo();
+                    case TravelerAction.Exit:
+                        //Display the closing screen in the Message Box area of the screen and exit the game.
+                        _playingGame = false;
+                        _gameConsoleView.DisplayClosingScreen();
                         break;
-                    case TravelerAction.TravelerEdit:
-                        //Allow the player to edit some of the traveler information.
-                        ReInitializeTraveler();
+                    case TravelerAction.ListGameObjects:
+                        //Display a list of all game objects in the Message Box area of the screen.
+                        _gameConsoleView.DisplayListOfGameObjects();
+                        break;
+                    case TravelerAction.ListWorlds:
+                        //Display a list of all the worlds in the universe in the Message Box area of the screen.
+                        _gameConsoleView.DislayListOfWorlds();
                         break;
                     case TravelerAction.LookAround:
                         //Display name and description of the current planet the player is on in the Message Box area of the screen.
                         _gameConsoleView.DisplayLookAround();
                         break;
+                    case TravelerAction.LookAtObject:
+                        //Display the information for a specific object in the player's current location.
+                        _gameConsoleView.DisplayGameObjectInfo();
+                        break;
+                    case TravelerAction.PutDownObject:
+                        //Pick up a game object and put it into inventory.
+                        _gameUniverse.PutDownItem(_gameUniverse, _gameTraveler, _gameConsoleView);
+                        break;
+                    case TravelerAction.PickUpObject:
+                        //Take a game object out of inventory and leave it on the current world.
+                        _gameUniverse.PickupItem(_gameUniverse, _gameTraveler, _gameConsoleView);
+                        break;
                     case TravelerAction.Travel:
-                        //_gameConsoleView.GetWorldToTravelTo();
                         planetDesignation = _gameConsoleView.GetWorldToTravelTo();
                         if (_gameUniverse.IsValidPlanetDesignation(planetDesignation) == true)
                         {
@@ -150,7 +199,6 @@ namespace StargateWorlds
                                 _gameTraveler.CurrentPlanet = planetDesignation;
                                 _gameConsoleView.DisplayLookAround();
                                 currentWorld = _gameUniverse.GetWorldByID(planetDesignation);
-                                //_gameTraveler.WorldsVisited.Add(planetDesignation, currentWorld.CommonName);
                                 _gameTraveler.AddVisitedWorld(planetDesignation, currentWorld.CommonName);
                                 _gameTraveler.IsOnNewWorld = true;
                             }
@@ -170,20 +218,35 @@ namespace StargateWorlds
                             _gameConsoleView.DisplayLookAround();
                         }
                         break;
+                    case TravelerAction.TravelerEdit:
+                        //Allow the player to edit some of the traveler information.
+                        ReInitializeTraveler();
+                        break;
+                    case TravelerAction.TravelerInfo:
+                        //Display the traveler's information in the Message Box area of the screen.
+                        _gameConsoleView.DisplayTravelerInfo();
+                        break;
                     case TravelerAction.TravelerLocationsVisited:
-                        //Display a list of worlds the traveler has visited.
+                        //Display a list of worlds the traveler has visited in the Message Box area of the screen.
                         _gameConsoleView.DisplayWorldsVisited();
+                        break;  
+                    case TravelerAction.AdminMenu:
+                        ActionMenu.currentMenu = ActionMenu.CurrentMenu.AdminMenu;
+                        _gameConsoleView.DisplayGamePlayScreen("Admin Menu", "Select an operation from the menu.", ActionMenu.AdminMenu, "");
                         break;
-                    case TravelerAction.ListWorlds:
-                        //Display a list of all the worlds in the universe.
-                        _gameConsoleView.DislayListOfWorlds();
+                    case TravelerAction.InventoryMenu:
+                        ActionMenu.currentMenu = ActionMenu.CurrentMenu.InventoryMenu;
+                        _gameConsoleView.DisplayGamePlayScreen("Inventory Menu", "Select an operation from the menu.", ActionMenu.InventoryMenu, "");
                         break;
-                    case TravelerAction.Exit:
-                        //Display the closing screen in the Message Box area of the screen and exit the game.
-                        _playingGame = false;
-                        _gameConsoleView.DisplayClosingScreen();
+                    case TravelerAction.ReturnToMainMenu:
+                        ActionMenu.currentMenu = ActionMenu.CurrentMenu.MainMenu;
+                        //_gameConsoleView.DisplayGamePlayScreen("Current Location", Text.LookAround(_gameUniverse.GetWorldByID(_gameTraveler.CurrentPlanet)), ActionMenu.MainMenu, "");
+                        _gameConsoleView.DisplayGamePlayScreen("Current Location", Text.LookAround(_gameUniverse.GetWorldByID(_gameTraveler.CurrentPlanet)) + " " + Text.GetWorldGameObjects(_gameUniverse.GetGameObjectsByWorld(_gameTraveler.CurrentPlanet)), ActionMenu.MainMenu, "");
                         break;
-
+                    case TravelerAction.TravelMenu:
+                        ActionMenu.currentMenu = ActionMenu.CurrentMenu.TravelMenu;
+                        _gameConsoleView.DisplayGamePlayScreen("Travel Menu", "Select an operation from the menu.", ActionMenu.TravelMenu, "");
+                        break;
                     default:
                         break;
                 }
@@ -227,6 +290,26 @@ namespace StargateWorlds
             {
                 switch (_gameTraveler.CurrentPlanet)
                 {
+                    case "P8X-362":   //Chulak (P8X-362)
+                        if(_gameTraveler.IsQuick == true)
+                        {
+                            _gameTraveler.UpdateTravelerHealth(Traveler.HealthChange.MinorInjury);
+                        }
+                        else
+                        {
+                            _gameTraveler.UpdateTravelerHealth(Traveler.HealthChange.MajorInjury);
+                        }
+                        break;
+                    case "P5C-768":   //Edora (P5C-768)
+                        if (_gameTraveler.IsLucky == true)
+                        {
+                            _gameTraveler.UpdateTravelerHealth(Traveler.HealthChange.MinorInjury);
+                        }
+                        else
+                        {
+                            _gameTraveler.UpdateTravelerHealth(Traveler.HealthChange.MajorInjury);
+                        }
+                        break;
                     case "P4A-771":   //Jebanna (P4A-771)
                         _gameTraveler.UpdateTravelerHealth(Traveler.HealthChange.PartialHealing);
                         break;
@@ -243,6 +326,13 @@ namespace StargateWorlds
 
             //Refresh the traveler stats in the Status Box.
             _gameConsoleView.DisplayStatusBox();
+
+            //If the player is dead end the game.
+            if (_gameTraveler.Health == Traveler.TravelerHealth.Dead)
+            {
+                _gameConsoleView.DisplayGamePlayScreen("Game Over", "Game Over.  Thank you for playing.", ActionMenu.InitializeMission, "");
+                _playingGame = false;
+            }
         }
 
         #endregion

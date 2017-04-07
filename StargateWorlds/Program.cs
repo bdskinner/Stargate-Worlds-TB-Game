@@ -41,11 +41,12 @@ namespace StargateWorlds
             // Application Type: Console Application
             // Author: Matt Grifin, Ben Skinner
             // Dated Created: 2/21/2017         
-            // Last Modified: 3/16/2017         
+            // Last Modified: 4/5/2017         
             //
             // **************************************************
 
 
+            //CHANGE TRAVELER HEALTH
             //TravelerHealth health = TravelerHealth.Good;
             //HealthChange healthChange = HealthChange.PartialHealing;
 
@@ -55,6 +56,38 @@ namespace StargateWorlds
             //if ((int)health >= (int)TravelerHealth.VeryGood) health = TravelerHealth.VeryGood;
             //Console.WriteLine("The traveler's health is: " + health);
             //Console.ReadKey();
+
+
+            //CHANGE WORLD ACCESSIBILITY
+            //_gameUniverse.Worlds[3].Accessable = true;
+
+
+            //UPDATE THE VALUE PART OF THE KEY-VALUE PAIR IN A DICTIONARY
+            //Dictionary<int, bool> testdictionary = new Dictionary<int, bool>();
+            //Console.WriteLine("Original Dictionary Values: \n");
+            //testdictionary.Add(1, false);
+            //testdictionary.Add(2, false);
+            //testdictionary.Add(3, false);
+            //testdictionary.Add(4, false);
+            //testdictionary.Add(5, false);
+            //foreach (KeyValuePair<int, bool> test in testdictionary)
+            //{
+            //    Console.WriteLine(test.Key + " - " + test.Value);
+            //}
+            //Console.WriteLine(" \n \n");
+
+            //testdictionary[1] = true;
+            //testdictionary[3] = true;
+            //testdictionary[5] = true;
+
+            //Console.WriteLine("New Dictionary Values: \n");
+            //foreach (KeyValuePair<int, bool> test in testdictionary)
+            //{
+            //    Console.WriteLine(test.Key + " - " + test.Value);
+            //}
+
+            //Console.ReadKey();
+
 
 
 

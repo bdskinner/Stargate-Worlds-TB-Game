@@ -18,11 +18,8 @@ namespace StargateWorlds
         private string _description;
         private string _generalContents;
         private string _planetDesignation; // must be a unique value for each object
+        private Dictionary<int, bool> _requiredObjects = new Dictionary<int, bool>(); //key = object ID, value = is the game object in inventory(true/false).
         private string _universalLocation;
-
-
-        //private int _universalDate;
-        //private int _experiencePoints;
 
         #endregion
 
@@ -56,6 +53,12 @@ namespace StargateWorlds
         {
             get { return _planetDesignation; }
             set { _planetDesignation = value; }
+        }
+
+        public Dictionary<int, bool> RequiredObjects
+        {
+            get { return _requiredObjects; }
+            set { _requiredObjects = value; }
         }
 
         public string UniversalLocation
@@ -93,7 +96,5 @@ namespace StargateWorlds
         
 
         #endregion
-
-
     }
 }

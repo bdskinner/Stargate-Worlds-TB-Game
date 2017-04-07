@@ -43,8 +43,9 @@ namespace StargateWorlds
         private bool _isOnNewWorld;
         private bool _isQuick;
         private string _rank;
+        private List<TravelerObject> _travelerInventory;
         private Dictionary<string, string> _worldsVisited;
-
+        
         #endregion
 
         #region PROPERTIES
@@ -85,6 +86,12 @@ namespace StargateWorlds
             set { _rank = value; }
         }
 
+        public List<TravelerObject> TravelerInventory
+        {
+            get { return _travelerInventory; }
+            set { _travelerInventory = value; }
+        }
+
         public Dictionary<string, string> WorldsVisited
         {
             get { return _worldsVisited; }
@@ -99,6 +106,7 @@ namespace StargateWorlds
         {
             _health = TravelerHealth.VeryGood;
             _goldCoins = 10;
+            _travelerInventory = new List<TravelerObject>();
             _worldsVisited = new Dictionary<string, string>();
         }
 
@@ -107,6 +115,7 @@ namespace StargateWorlds
             _rank = rank;
             _health = TravelerHealth.VeryGood;
             _goldCoins = 10;
+            _travelerInventory = new List<TravelerObject>();
             _worldsVisited = new Dictionary<string, string>();
         }
 

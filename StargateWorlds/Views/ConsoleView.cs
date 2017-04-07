@@ -80,12 +80,98 @@ namespace StargateWorlds
         }
 
         /// <summary>
+        /// Displays the name and description of a specific object selected by the user.
+        /// </summary>
+        public void DisplayGameObjectInfo()
+        {
+            //Variable Declarations.
+            int objectIDValue = 0;
+            GameObject gameObjectToGet;
+            List<GameObject> gameObjectList;
+            TravelerObject objectToView;
+
+            //Check the number of game objects on the current world.
+            gameObjectList = _gameUniverse.GetGameObjectsByWorld(_gameTraveler.CurrentPlanet);
+            if(gameObjectList.Count > 0)
+            {
+                //If there is one or more game object available on the current world for the traveler to pick up...
+
+                //Display a list of game objects.
+                DisplayGamePlayScreen("Game Object List", Text.GetWorldGameObjects(gameObjectList), ActionMenu.InventoryMenu, "");
+
+                //Get the object's ID value from the user.
+                GetInteger("Enter the Object ID: ", 0, 0, out objectIDValue);
+                
+                //Check to see if the game object id entered is a valid object on the current world.
+                if(_gameUniverse.IsValidGameOBjectByWorldID(objectIDValue, _gameTraveler.CurrentPlanet))
+                {
+                    //If the game object is available on the current world...
+
+                    //Get the information about the object with the ID value entered by the user.
+                    gameObjectToGet = _gameUniverse.GetGameObjectByID(objectIDValue);
+                    objectToView = gameObjectToGet as TravelerObject;
+
+                    //Display the object's informaton to the Message Box area of the screen.
+                    //DisplayGamePlayScreen("Object Information", Text.GetGameObjectDetail(objectToView), ActionMenu.MainMenu, "");
+                    DisplayGamePlayScreen("Object Information", Text.GetGameObjectDetail(objectToView), ActionMenu.InventoryMenu, "");
+                }
+                else
+                {
+                    //The object is not on the world...
+
+                    //Display an error message in the Input Box area of the screen.
+                    DisplayInputErrorMessage("The object entered is not available on this world.  Press any key to continue.");
+                    Console.ReadKey();
+                    DisplayGamePlayScreen("Inventory Menu", "Select an operation from the menu.", ActionMenu.InventoryMenu, "");
+                }
+            }
+            else
+            {
+                //If there are no game objects available on the current world...
+
+                //Display a list of game objects.
+                DisplayGamePlayScreen("Game Object List", Text.GetWorldGameObjects(gameObjectList), ActionMenu.InventoryMenu, "");
+            }
+        }
+
+        /// <summary>
+        /// Displays a list of all game objects on the screen.
+        /// </summary>
+        public void DisplayListOfGameObjects()
+        {
+            //Display a list of all the game objects in the Message Box area of the screen.
+            //DisplayGamePlayScreen("List of Game Objects", Text.GetAllGameObjects(_gameUniverse.GameObjects), ActionMenu.MainMenu, "");            
+            DisplayGamePlayScreen("List of Game Objects", Text.GetAllGameObjects(_gameUniverse.GameObjects), ActionMenu.AdminMenu, "");
+        }
+
+        /// <summary>
+        /// Displays the traveler's current inventory in the Message Box area of the screen.
+        /// </summary>
+        public void DisplayTravelerInventory()
+        {
+            //Variable Declarations.
+            List<TravelerObject> travelerInventory = new List<TravelerObject>();
+            
+            //Look through the game objects and add any with a zero(0) planet designation to the traveler's inventory list.
+            foreach (GameObject gameObject in _gameUniverse.GameObjects)
+            {
+                if (gameObject.PlanetDesignation == "0")
+                {
+                    travelerInventory.Add((TravelerObject)gameObject);
+                }
+            }
+
+            //Display the object's informaton to the Message Box area of the screen.
+            DisplayGamePlayScreen("Traveler Inventory", Text.GetCurrentInventory(travelerInventory), ActionMenu.InventoryMenu, ""); 
+        }
+
+        /// <summary>
         /// Gets the world the player would like to go to next.
         /// </summary>
         public string GetWorldToTravelTo()
         {
             //Display the list of worlds.
-            DisplayGamePlayScreen("Travel to World", Text.TravelToWorld(_gameUniverse, _gameTraveler), ActionMenu.MainMenu, "");
+            DisplayGamePlayScreen("Travel to World", Text.TravelToWorld(_gameUniverse, _gameTraveler), ActionMenu.TravelMenu, "");
             DisplayInputBoxPrompt($"Enter Number for World: ");
 
             //Get the planet designation of the world the player wants to travel to.
@@ -102,13 +188,9 @@ namespace StargateWorlds
         /// <returns></returns>
         public void DisplayWorldsVisited()
         {
-            //Display the list of worlds.
-            DisplayGamePlayScreen("Worlds Visited", Text.WorldsVisited(_gameUniverse, _gameTraveler), ActionMenu.MainMenu, "");
-            //DisplayInputBoxPrompt($"Enter Number for World: ");
-
-            //Get the planet designation of the world the player wants to travel to.
-            //GetInteger("Enter Number of World: ", 1, _gameUniverse.Worlds.Count, out worldChoice);
-            //DisplayInputBoxPrompt("Enter the Designation: ");
+            //Display the list of worlds that the player has visited.
+            //DisplayGamePlayScreen("Worlds Visited", Text.WorldsVisited(_gameUniverse, _gameTraveler), ActionMenu.MainMenu, "");
+            DisplayGamePlayScreen("Worlds Visited", Text.WorldsVisited(_gameUniverse, _gameTraveler), ActionMenu.AdminMenu, "");
         }
 
         /// <summary>
@@ -116,7 +198,8 @@ namespace StargateWorlds
         /// </summary>
         public void DislayListOfWorlds()
         {
-            DisplayGamePlayScreen("List of Worlds", Text.DisplayWorlds(_gameUniverse, _gameTraveler, true), ActionMenu.MainMenu, "");
+            //DisplayGamePlayScreen("List of Worlds", Text.DisplayWorlds(_gameUniverse, _gameTraveler, true), ActionMenu.MainMenu, "");
+            DisplayGamePlayScreen("List of Worlds", Text.DisplayWorlds(_gameUniverse, _gameTraveler, true), ActionMenu.AdminMenu, "");
         }
 
         /// <summary>
@@ -171,23 +254,38 @@ namespace StargateWorlds
         /// <returns>integer value</returns>
         public bool GetInteger(string prompt, int minimumValue, int maximumValue, out int integerChoice)
         {
-            bool validResponse = false;
+            //Variable Declarations.
             integerChoice = 0;
+            bool validateRange = false;
+            bool validResponse = false;
 
+            //If the min and max values are not zero, validate the range.
+            validateRange = (minimumValue != 0 && maximumValue != 0);
+
+            //Prompt the user to enter an integer value.
             DisplayInputBoxPrompt(prompt);
+
+            //Validate the user's response.
             while (!validResponse)
             {
                 if (int.TryParse(Console.ReadLine(), out integerChoice))
                 {
-                    if (integerChoice >= minimumValue && integerChoice <= maximumValue)
+                    if (validateRange == true)
                     {
-                        validResponse = true;
+                        if (integerChoice >= minimumValue && integerChoice <= maximumValue)
+                        {
+                            validResponse = true;
+                        }
+                        else
+                        {
+                            ClearInputBox();
+                            DisplayInputErrorMessage($"You must enter an integer value between {minimumValue} and {maximumValue}. Please try again.");
+                            DisplayInputBoxPrompt(prompt);
+                        }
                     }
                     else
                     {
-                        ClearInputBox();
-                        DisplayInputErrorMessage($"You must enter an integer value between {minimumValue} and {maximumValue}. Please try again.");
-                        DisplayInputBoxPrompt(prompt);
+                        validResponse = true;
                     }
                 }
                 else
@@ -483,11 +581,20 @@ namespace StargateWorlds
         /// </summary>
         public void DisplayLookAround()
         {
-            //SpaceTimeLocation currentSpaceTimeLocation = _gameUniverse.GetSpaceTimeLocationByID(_gameTraveler.SpaceTimeLocationID);
-            //DisplayGamePlayScreen("Current Location", Text.LookAround(currentSpaceTimeLocation), ActionMenu.MainMenu, "");
+            //Variable Declarations.
+            string messageText = "";
 
-            World currentWorld = _gameUniverse.GetWorldByID(_gameTraveler.CurrentPlanet);
-            DisplayGamePlayScreen("Current Location", Text.LookAround(currentWorld), ActionMenu.MainMenu, "");
+            //Display the description of the player's current location in the Message Box area of the screen.
+            //DisplayGamePlayScreen("Current Location", Text.LookAround(_gameUniverse.GetWorldByID(_gameTraveler.CurrentPlanet)), ActionMenu.MainMenu, "");
+
+            //Get the description of the player's current location.
+            messageText = Text.LookAround(_gameUniverse.GetWorldByID(_gameTraveler.CurrentPlanet));
+
+            //Get a list of game objects that are in the player's current location.
+            messageText += Text.GetWorldGameObjects(_gameUniverse.GetGameObjectsByWorld(_gameTraveler.CurrentPlanet));
+
+            //Display the description of the player's current location in the Message Box area of the screen.
+            DisplayGamePlayScreen("Current Location", messageText, ActionMenu.TravelMenu, "");
         }
 
         /// <summary>
@@ -572,6 +679,9 @@ namespace StargateWorlds
         {
             //Variable Declarations.
             Traveler traveler = new Traveler();
+            Random rnd = new Random();
+            int lucky = rnd.Next(1, 11); 
+            int quick = rnd.Next(1, 11);   
 
             //
             // intro
@@ -621,12 +731,12 @@ namespace StargateWorlds
             traveler.GoldCoins = 10;
 
             //Set the traveler's luck and quick properties.
-            if (traveler.Age % 2 == 0)
+            if (lucky % 2 == 0)
                 traveler.IsLucky = true;
             else
                 traveler.IsLucky = false;
 
-            if (traveler.Age % 2 == 0)
+            if (quick % 2 == 0)
                 traveler.IsQuick = true;
             else
                 traveler.IsQuick = false;
@@ -669,7 +779,8 @@ namespace StargateWorlds
 
         public void DisplayTravelerInfo()
         {
-            DisplayGamePlayScreen("Traveler Information", Text.TravelerInfo(_gameTraveler), ActionMenu.MainMenu, "");
+            //DisplayGamePlayScreen("Traveler Information", Text.TravelerInfo(_gameTraveler), ActionMenu.MainMenu, "");
+            DisplayGamePlayScreen("Traveler Information", Text.TravelerInfo(_gameTraveler), ActionMenu.AdminMenu, "");
         }
 
         public Traveler EditTravelerInfo()
@@ -723,7 +834,8 @@ namespace StargateWorlds
             //
             // echo the traveler's info
             //
-            DisplayGamePlayScreen("Edit Traveler Information - Complete", Text.ReinitializeTravelerEchoTravelerInfo(traveler), ActionMenu.MainMenu, "");
+            //DisplayGamePlayScreen("Edit Traveler Information - Complete", Text.ReinitializeTravelerEchoTravelerInfo(traveler), ActionMenu.MainMenu, "");
+            DisplayGamePlayScreen("Edit Traveler Information - Complete", Text.ReinitializeTravelerEchoTravelerInfo(traveler), ActionMenu.AdminMenu, "");
             GetContinueKey();
 
             return traveler;
