@@ -26,6 +26,7 @@ namespace StargateWorlds
 
         public enum HealthChange
         {
+            None = 0,
             MajorInjury = -3,
             ModerateInjury = -2,
             MinorInjury = -1,
@@ -37,7 +38,7 @@ namespace StargateWorlds
 
         #region FIELDS
 
-        private string _currentPlanet;
+        //private string _currentPlanet;
         private int _goldCoins;
         private TravelerHealth _health;
         private bool _isOnNewWorld;
@@ -50,52 +51,45 @@ namespace StargateWorlds
 
         #region PROPERTIES
 
-        public string CurrentPlanet
-        {
-            get { return _currentPlanet; }
-            set { _currentPlanet = value; }
-        }
-
-        public int GoldCoins
+        public int GoldCoins   //The amount of money (in gold coins) that the traveler has on hand.
         {
             get { return _goldCoins; }
             set { _goldCoins = value; }
         }
 
-        public TravelerHealth Health
+        public TravelerHealth Health   //The traveler's current health status.
         {
             get { return _health; }
             set { _health = value; }
         }
 
-        public bool IsOnNewWorld
+        public bool IsOnNewWorld   //Is true when the travels changes worlds.
         {
             get { return _isOnNewWorld; }
             set { _isOnNewWorld = value; }
         }
 
-        public bool IsQuick
+        public bool IsQuick   //Determines whether or not the traveler is quick.
         {
             get { return _isQuick; }
             set { _isQuick = value; }
         }
 
-        public string Rank
+        public string Rank   //The traveler's military rank.
         {
             get { return _rank; }
             set { _rank = value; }
         }
 
-        public List<TravelerObject> TravelerInventory
+        public List<TravelerObject> TravelerInventory   //A list of objects the traveler has in their possession.
         {
             get { return _travelerInventory; }
             set { _travelerInventory = value; }
         }
 
-        public Dictionary<string, string> WorldsVisited
+        public Dictionary<string, string> WorldsVisited   //A list of the worlds the traveler has visited (Will not contain any duplicate values).
         {
             get { return _worldsVisited; }
-            //set { _worldsVisited = value; }
         }
 
         #endregion
@@ -137,10 +131,30 @@ namespace StargateWorlds
                 _worldsVisited.Add(planetDesignation, commonName);
             }
         }
-
+        
         public override void Attack()
         {
             Console.WriteLine("The traveler is attacking the enemy.");
+        }
+
+        /// <summary>
+        /// Determines whether or not the traveler has enough currency to buy a game object.
+        /// </summary>
+        /// <param name="objectValue"></param>
+        /// <returns></returns>
+        public bool IsEnoughCurrency(int objectValue)
+        {
+            //Compare the game object's value with the currency the traveler has.
+            if (_goldCoins >= objectValue)
+            {
+                //Enough to buy...
+                return true;
+            }
+            else
+            {
+                //Not enough to buy...
+                return false;
+            }
         }
 
         public override void Run()

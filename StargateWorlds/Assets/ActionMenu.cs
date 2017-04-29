@@ -40,7 +40,8 @@ namespace StargateWorlds
                     { '1', TravelerAction.AdminMenu },
                     { '2', TravelerAction.TravelMenu },
                     { '3', TravelerAction.InventoryMenu },
-                    { '4', TravelerAction.Exit }
+                    { '4', TravelerAction.NpcMenu },
+                    { '5', TravelerAction.Exit }
                 }
         };
 
@@ -55,7 +56,8 @@ namespace StargateWorlds
                     { '3', TravelerAction.ListWorlds },
                     { '4', TravelerAction.TravelerLocationsVisited },
                     { '5', TravelerAction.ListGameObjects },
-                    { '6', TravelerAction.ReturnToMainMenu }
+                    { '6', TravelerAction.ListNonplayerCharacters },
+                    { '7', TravelerAction.ReturnToMainMenu }
                 }
         };
 
@@ -70,6 +72,18 @@ namespace StargateWorlds
                     { '3', TravelerAction.PutDownObject },
                     { '4', TravelerAction.LookAtObject },
                     { '5', TravelerAction.ReturnToMainMenu }
+                }
+        };
+
+        public static Menu NpcMenu = new Menu()
+        {
+            MenuName = "NpcMenu",
+            MenuTitle = "NPC Menu",
+            MenuChoices = new Dictionary<char, TravelerAction>()
+                {
+                    { '1', TravelerAction.TalkToNpc },
+                    { '2', TravelerAction.NpcInformation },
+                    { '3', TravelerAction.ReturnToMainMenu }
                 }
         };
 
@@ -91,6 +105,7 @@ namespace StargateWorlds
             InventoryMenu,
             MainMenu,
             TravelMenu,
+            NpcMenu,
             InitializeMission
         }
 

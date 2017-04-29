@@ -12,7 +12,7 @@ namespace StargateWorlds
     public static class Text
     {
         public static List<string> HeaderText = new List<string>() { "Stargate Worlds" };
-        public static List<string> FooterText = new List<string>() { "Bird Brain Inernational 2017" };
+        public static List<string> FooterText = new List<string>() { "Bird Brain International 2017" };
 
         #region INTITIAL GAME SETUP         
 
@@ -23,15 +23,8 @@ namespace StargateWorlds
         public static string CurrrentLocationInfo()
         {
             string messageBoxText =
-            //"You are now in the Norlon Corporation research facility located in " +
-            //"the city of Heraklion on the north coast of Crete. You have passed through " +
-            //"heavy security and descended an unknown number of levels to the top secret " +
-            //"research lab for the Aion Project.\n" +
-            //" \n" +
-            //"\tChoose from the menu options to proceed.\n";
-
             "You have just entered the Gate Room where Earth's Stargate is located in a top\n" +
-            "secret U.S. Airforce installation under Cheyenne Mountain in Colorado.  You just returned\n" +
+            "secret U.S. AirForce installation under Cheyenne Mountain in Colorado.  You just returned\n" +
             "from your scouting mission and have brief your commanding officer, Gen. George Hammond, on\n" +
             "what you have found.  Gen. Hammond orders you to the planet of Abydos to speak wih the\n" +
             "leaders of that planet to acquire the Trinium necessary for Earth's defense.\n" +
@@ -238,7 +231,44 @@ namespace StargateWorlds
             "Press any key to exit\n";
 
             return messageBoxText;
-        }        
+        }
+
+        /// <summary>
+        /// Displays the formatted information about a specific NPC.
+        /// </summary>
+        /// <param name="npcToDisplay"></param>
+        /// <returns></returns>
+        public static string DisplayNpcInformation(Npc npcToDisplay)
+        {
+            Civilian civilianToDisplay;
+            string messageBoxText = "";
+            Warrior warriorToDisply;
+
+            if (npcToDisplay is Civilian)
+            {
+                civilianToDisplay = npcToDisplay as Civilian;
+                messageBoxText =
+                $"Name: {civilianToDisplay.FirstName} {civilianToDisplay.LastName} \n" +
+                " \n" +
+                $"Description: {civilianToDisplay.Description} \n" +
+                " \n";
+            }
+
+            if (npcToDisplay is Warrior)
+            {
+                warriorToDisply = npcToDisplay as Warrior;
+                messageBoxText =
+                $"Name: {warriorToDisply.FirstName} {warriorToDisply.LastName} \n" +
+                " \n" +
+                $"Description: {warriorToDisply.Description} \n" +
+                " \n";
+            }
+
+
+
+            //Return the text to display in the Message area of the screen.
+            return messageBoxText;
+        }
 
         /// <summary>
         /// Returns a list of all worlds that are in stargate network.
@@ -261,15 +291,20 @@ namespace StargateWorlds
             {
                 if (displayCurrenLocation == true)
                 {
-                    //Display the traveler's current world as part of the list.
+                    //Display the traveler's current world as part of the list...
+
                     heightList += $"{location.PlanetDesignation} \t\t\t {location.CommonName} \n";
                 }
                 else
                 {
-                    //Do not display the traveler's current world as part of the list.
+                    //Do not display the traveler's current world as part of the list...
+                    
                     if (gameTraveler.CurrentPlanet != location.PlanetDesignation)
                     {
-                        heightList += $"{location.PlanetDesignation} \t\t\t {location.CommonName} \n";
+                        if (location.Visible == true)
+                        {
+                            heightList += $"{location.PlanetDesignation} \t\t\t {location.CommonName} \n";
+                        }
                     }
                 }
             }
@@ -359,6 +394,46 @@ namespace StargateWorlds
         }
 
         /// <summary>
+        /// Returns a list of all npc objects.
+        /// </summary>
+        /// <param name="npcObjects"></param>
+        /// <returns></returns>
+        public static string GetAllNpcObjects(List<Npc> npcObjects)
+        {
+            //Variable Declarations.
+            string messageText = "";
+            string gameObjectList = "";
+            int ID_PAD = 5;
+            int NAME_PAD = 50;
+            int PLANET_PAD = 10;
+
+            //Setup the table headers and column names.
+            messageText =
+                "Non-playable Characters \n \n" +
+                "ID".PadRight(ID_PAD) +
+                "Name".PadRight(NAME_PAD) +
+                "Plant Designation".PadRight(PLANET_PAD) + " \n" +
+                "---".PadRight(ID_PAD) +
+                "----------------------".PadRight(NAME_PAD) +
+                "----------------------".PadRight(PLANET_PAD) + " \n";
+
+            //Setup the list of game objects.
+            gameObjectList = null;
+            foreach (Npc npcObject in npcObjects)
+            {
+                gameObjectList += $"{npcObject.ID}".PadRight(ID_PAD) +
+                    $"{npcObject.FirstName} {npcObject.LastName}".PadRight(NAME_PAD) +
+                    $"{npcObject.CurrentPlanet}".PadRight(PLANET_PAD) +
+                    " \n";
+            }
+
+            messageText += gameObjectList;
+
+            //Return a list of the game objects with their ID, Name, and Location.
+            return messageText;
+        }
+
+        /// <summary>
         /// Gets a formated list of all the game objects in the traveler's inventory.
         /// </summary>
         /// <param name="travelerInventory"></param>
@@ -411,7 +486,7 @@ namespace StargateWorlds
         }
 
         /// <summary>
-        /// Returns the game objects for a specific world.
+        /// Returns a formated list of the game objects for a specific world.
         /// </summary>
         /// <param name="gameObjects"></param>
         /// <returns></returns>
@@ -422,7 +497,8 @@ namespace StargateWorlds
             int ID_PAD = 5;
             string messageText = "";
             int NAME_PAD = 50;
-            int PLANET_PAD = 10;
+            int PLANET_PAD = 30;
+            int VALUE_PAD = 10;
             TravelerObject travelerObject;
 
             //Setup the table headers and column names.
@@ -430,10 +506,12 @@ namespace StargateWorlds
                 " \nGame Objects \n \n" +
                 "ID".PadRight(ID_PAD) +
                 "Name".PadRight(NAME_PAD) +
-                "Object Type".PadRight(PLANET_PAD) + " \n" +
+                "Object Type".PadRight(PLANET_PAD) + 
+                "Object Value".PadRight(VALUE_PAD) + " \n" +
                 "---".PadRight(ID_PAD) +
                 "----------------------".PadRight(NAME_PAD) +
-                "----------------------".PadRight(PLANET_PAD) + " \n";
+                "----------------------".PadRight(PLANET_PAD) +
+                "----------------------".PadRight(VALUE_PAD) + " \n";
 
             //Check the number of objects for the player's current world.
             if (gameObjects.Count > 0)
@@ -448,6 +526,7 @@ namespace StargateWorlds
                     gameObjectList += $"{travelerObject.ItemID}".PadRight(ID_PAD) +
                         $"{travelerObject.ItemName}".PadRight(NAME_PAD) +
                         $"{travelerObject.ItemType}".PadRight(PLANET_PAD) +
+                        $"{travelerObject.Value}" +
                         " \n";
                 }
             }
@@ -458,6 +537,53 @@ namespace StargateWorlds
             }
 
             messageText += gameObjectList;
+
+            //Return a list of the game objects with their ID, Name, and Location.
+            return messageText;
+        }
+
+        /// <summary>
+        /// Returns a formated list of the npc's for a specific world.
+        /// </summary>
+        /// <param name="npcObjects"></param>
+        /// <returns></returns>
+        public static string GetWorldNpcObjects(List<Npc> npcObjects)
+        {
+            //Variable Declarations.
+            string npcObjectList = "";
+            int ID_PAD = 5;
+            string messageText = "";
+            int NAME_PAD = 50;
+
+            //Setup the table headers and column names.
+            messageText =
+                " \nNon-Playable Characters \n \n" +
+                "ID".PadRight(ID_PAD) +
+                "Name".PadRight(NAME_PAD) + " \n" +
+                "---".PadRight(ID_PAD) +
+                "----------------------".PadRight(NAME_PAD) + " \n";
+
+            //Check the number of objects for the player's current world.
+            if (npcObjects.Count > 0)
+            {
+                //One or more objects for the current world...
+
+                //Setup the list of npc objects.
+                npcObjectList = null;
+                foreach (Npc npcobject in npcObjects)
+                {
+                    npcObjectList += $"{npcobject.ID}".PadRight(ID_PAD) +
+                        $"{npcobject.FirstName} {npcobject.LastName}".PadRight(NAME_PAD) +
+                        " \n";
+                }
+            }
+            else
+            {
+                //No objects for the current world...
+                npcObjectList += " \nNo Non-Playable Characters Present";
+            }
+
+            messageText += npcObjectList;
 
             //Return a list of the game objects with their ID, Name, and Location.
             return messageText;
@@ -483,6 +609,33 @@ namespace StargateWorlds
             return messageText;
         }
 
+        /// <summary>
+        /// Displays text in the Message Box area of the screen prompting the player to enter the NPC
+        /// they want to get information about and displays a list of all NPC's on the current world.
+        /// </summary>
+        /// <param name="npcID"></param>
+        /// <param name="planetDesignation"></param>
+        /// <param name="gameUniverse"></param>
+        /// <returns></returns>
+        public static string GetNpcInformation(string planetDesignation, Universe gameUniverse)
+        {
+            //Variable Declarations.
+            List<Npc> npcsForWorld = new List<Npc>();
+
+            string messageBoxText =
+                $"What NPC would you like information about? \n" +
+                " \n" +
+                "Please enter the number of one of the NPC's below: \n" +
+                " \n";
+
+            //Add the list of the NPC's on the current world to the message box text.
+            npcsForWorld = gameUniverse.GetNpcsByWorld(planetDesignation);
+            messageBoxText += Text.GetAllNpcObjects(npcsForWorld);
+            
+            //Return the text to display in the Message area of the screen.
+            return messageBoxText;
+        }
+        
         /// <summary>
         /// Returns the name and description of the current world the player is on.
         /// </summary>
@@ -536,7 +689,6 @@ namespace StargateWorlds
                 $"\tTraveler Last Name: {gameTraveler.LastName}\n" +
                 $"\tTraveler Age: {gameTraveler.Age}\n" +
                 $"\tTraveler Height: {gameTraveler.Height}\n" +
-                //$"\tTraveler Health: {gameTraveler.Health}\n" +
                 $"\tTraveler Health: {ConsoleWindowHelper.ToLabelFormat(gameTraveler.Health.ToString())}\n" +
                 $"\tTraveler Gold Coins: {gameTraveler.GoldCoins}\n" +
                 $"\tTraveler Lucky: {gameTraveler.IsLucky}\n" +
@@ -554,6 +706,7 @@ namespace StargateWorlds
         /// <returns></returns>
         public static string TravelToWorld(Universe gameUniverse, Traveler gameTraveler)
         {
+            //Variable Declarations.
             string messageBoxText =
                 $"What world would you like to travel to? \n" +
                 " \n" +
@@ -575,6 +728,7 @@ namespace StargateWorlds
         /// <returns></returns>
         public static string WorldsVisited(Universe gameUniverse, Traveler gameTraveler)
         {
+            //Variable Declarations.
             string messageBoxText =
                 $"Belowe is a list of the worlds you have visited: \n" +
                 " \n";

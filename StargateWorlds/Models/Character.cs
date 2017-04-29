@@ -25,7 +25,8 @@ namespace StargateWorlds
 
         #region FIELDS
 
-        private int _age; 
+        private int _age;
+        private string _currentPlanet;
         private string _firstName;
         private HeightLevel _height;
         private bool _isLucky;
@@ -35,31 +36,37 @@ namespace StargateWorlds
 
         #region PROPERTIES
 
-        public int Age
+        public int Age   //The age of the traveler.
         {
             get { return _age; }
             set { _age = value; }
         }
-
-        public string FirstName
+        
+        public string CurrentPlanet   //The world the traveler is currently on.
+        {
+            get { return _currentPlanet; }
+            set { _currentPlanet = value; }
+        }
+        
+        public string FirstName   //The traveler's first name.
         {
             get { return _firstName; }
             set { _firstName = value; }
         }
 
-        public HeightLevel Height
+        public HeightLevel Height   //The traveler's height.
         {
             get { return _height; }
             set { _height = value; }
         }
 
-        public bool IsLucky
+        public bool IsLucky   //Determines whether the traveler is lucky or not.
         {
             get { return _isLucky; }
             set { _isLucky = value; }
         }
 
-        public string LastName
+        public string LastName   //The traveler's last name.
         {
             get { return _lastName; }
             set { _lastName = value; }
@@ -73,13 +80,6 @@ namespace StargateWorlds
         {
 
         }
-
-        //public Character(string name, RaceType race, int spaceTimeLocationID)
-        //{
-        //    _name = name;
-        //    _race = race;
-        //    _spaceTimeLocationID = spaceTimeLocationID;
-        //}
 
         public Character(string firstName, string lastName, int age)
         {

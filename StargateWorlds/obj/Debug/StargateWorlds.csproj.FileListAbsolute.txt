@@ -10,3 +10,17 @@ C:\Users\Ben\Documents\CIT 195\Projects\StargateWorlds\StargateWorlds\obj\Debug\
 C:\Users\Ben\Documents\CIT 195\Projects\StargateWorlds\StargateWorlds\obj\Debug\StargateWorlds.pdb
 C:\Users\Ben\Documents\CIT 195\Projects\StargateWorlds\StargateWorlds\bin\Debug\StargateWorlds.exe
 C:\Users\Ben\Documents\CIT 195\Projects\StargateWorlds\StargateWorlds\bin\Debug\StargateWorlds.pdb
+D:\CIT 195\StargateWorlds\StargateWorlds\bin\Debug\StargateWorlds.exe.config
+D:\CIT 195\StargateWorlds\StargateWorlds\obj\Debug\StargateWorlds.exe
+D:\CIT 195\StargateWorlds\StargateWorlds\obj\Debug\StargateWorlds.pdb
+D:\CIT 195\StargateWorlds\StargateWorlds\bin\Debug\StargateWorlds.exe
+D:\CIT 195\StargateWorlds\StargateWorlds\bin\Debug\StargateWorlds.pdb
+D:\CIT 195\StargateWorlds\StargateWorlds\obj\Debug\StargateWorlds.csprojResolveAssemblyReference.cache
+E:\CIT 195\StargateWorlds\StargateWorlds\bin\Debug\StargateWorlds.exe.config
+E:\CIT 195\StargateWorlds\StargateWorlds\obj\Debug\StargateWorlds.exe
+E:\CIT 195\StargateWorlds\StargateWorlds\obj\Debug\StargateWorlds.pdb
+E:\CIT 195\StargateWorlds\StargateWorlds\bin\Debug\StargateWorlds.exe
+E:\CIT 195\StargateWorlds\StargateWorlds\bin\Debug\StargateWorlds.pdb
+E:\CIT 195\StargateWorlds\StargateWorlds\obj\Debug\StargateWorlds.csprojResolveAssemblyReference.cache
+Q:\CIT 195\Projects\StargateWorlds\StargateWorlds\bin\Debug\UtilityLibrary.dll
+C:\Users\Ben\Documents\CIT 195\Projects\StargateWorlds\StargateWorlds\bin\Debug\UtilityLibrary.dll

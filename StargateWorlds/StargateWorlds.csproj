@@ -41,12 +41,16 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="UtilityLibrary">
+      <HintPath>..\UtilityLibrary.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\ActionMenu.cs" />
     <Compile Include="Assets\GameObject.cs" />
     <Compile Include="Assets\Text.cs" />
     <Compile Include="Assets\TravelerObject.cs" />
+    <Compile Include="Assets\UniverseNpcs.cs" />
     <Compile Include="Assets\UniverseObjectsGameObjects.cs" />
     <Compile Include="Assets\UniverseObjectsWorldLocations.cs" />
     <Compile Include="ConsoleUtilities\ConsoleLayout.cs" />
@@ -54,9 +58,14 @@
     <Compile Include="ConsoleUtilities\ConsoleWindowControl.cs" />
     <Compile Include="ConsoleUtilities\ConsoleWindowHelper.cs" />
     <Compile Include="Controllers\Controller.cs" />
+    <Compile Include="Interfaces\IBattle.cs" />
+    <Compile Include="Interfaces\ISpeak.cs" />
     <Compile Include="Models\Character.cs" />
+    <Compile Include="Models\Civilian.cs" />
     <Compile Include="Models\Enums\TravelerObjectType.cs" />
     <Compile Include="Models\Menu.cs" />
+    <Compile Include="Models\Npc.cs" />
+    <Compile Include="Models\Warrior.cs" />
     <Compile Include="Models\World.cs" />
     <Compile Include="Models\Traveler.cs" />
     <Compile Include="Models\TravelerAction.cs" />

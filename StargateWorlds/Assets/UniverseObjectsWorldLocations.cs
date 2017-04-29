@@ -26,6 +26,7 @@ namespace StargateWorlds
                     "location for the Stargate.  This room is overlooked by the Control Room, " +
                     "which is the operational center for all activities involving the Stargate. \n",
                 Accessable = true,
+                Visible = true,
             },
 
             new World
@@ -42,6 +43,7 @@ namespace StargateWorlds
                     "two walls of the chamber. The room is usually busy with the activity of counselors " +
                     "and aids discussing and debating various issues. \n",
                 Accessable = true,
+                Visible = true,
             },
 
             new World
@@ -55,9 +57,10 @@ namespace StargateWorlds
                     "of the technological advancement on Asgard Prime.\n",
                 GeneralContents = "Thor's Lab is a large dimly lit room contains may tables, shelves, and workbenches, " +
                     "all of which are covered with various types of advanced technology.  Because of " +
-                    "the shorter stature of the Asgard race everything in the lab appears small to" + 
+                    "the shorter stature of the Asgard race everything in the lab appears small to " + 
                     "other visiting races like Humans. \n",
                 Accessable = true,
+                Visible = true,
             },
 
             new World
@@ -74,6 +77,7 @@ namespace StargateWorlds
                     "Jaffa soldiers. " +
                     " \n",
                 Accessable = false,
+                Visible = true,
                 RequiredObjects =
                 {
                     {10, false},
@@ -93,6 +97,7 @@ namespace StargateWorlds
                     "ceiling, and floor have a glassy appearance.  The members of the Tok'Ra counsel sit on " +
                     "two sides of a three sided table that is made from the same material as the rest of the room. \n",
                 Accessable = true,
+                Visible = true,
             },
 
             new World
@@ -109,6 +114,7 @@ namespace StargateWorlds
                     "smaller areas for individual are for more specialized treatment.  Each alcove is equiped with an " +
                     "array of medical tools that can treat a wide variety of minor to moderate injuryies. \n",
                 Accessable = true,
+                Visible = true,
             },
 
             new World
@@ -122,6 +128,7 @@ namespace StargateWorlds
                     "Graviton Emitters.  Any equipment that Plascon produces can be acquired not only from the many facilities " +
                     "that sell repair and diagnostic equipment, but also directly from the Plascon Facility. \n",
                 Accessable = true,
+                Visible = true,
             },
 
             new World
@@ -136,6 +143,7 @@ namespace StargateWorlds
                     "Laser Drills and Magna-Spanners to Maglocks and Holographic Imagers can be found and acquired here... " +
                     "for a price. \n",
                 Accessable = true,
+                Visible = true,
             },
 
             new World
@@ -149,6 +157,7 @@ namespace StargateWorlds
                     "Interphasic Scanners.  Any equipment that Dagenham produces can be acquired not only from the many facilities " +
                     "that sell repair and diagnostic equipment, but also directly from the Dagenham Facility. \n",
                 Accessable = true,
+                Visible = true,
             },
 
             new World
@@ -166,92 +175,26 @@ namespace StargateWorlds
                     "in the generation of power are housed in separate reinforced store rooms located in the basement of the facility. " +
                     " \n",
                 Accessable = false,
+                Visible = true,
                 RequiredObjects =
                 {
                     {1, false},
                     {2, false},
                     {3, false},
+                    {5, false},
                 }
             },
 
-
-
-
-
-            //new World
-            //{
-            //    CommonName = "",
-            //    PlanetDesignation = "",
-            //    UniversalLocation = "P-3, SS-278, G-2976, LS-3976",
-            //    Description = " " +
-            //        " " +
-            //        " " +
-            //        ".\n",
-            //    GeneralContents = ", " +
-            //        " " +
-            //        " " +
-            //        " \n",
-            //    Accessable = true,
-            //},
-
-
-            //new World
-            //{
-            //    CommonName = "Aion Base Lab",
-            //    SpaceTimeLocationID = 1,
-            //    UniversalDate = 386759,
-            //    UniversalLocation = "P-3, SS-278, G-2976, LS-3976",
-            //    Description = "The Norlon Corporation research facility located in " +
-            //        "the city of Heraklion on the north coast of Crete and the top secret " +
-            //        "research lab for the Aion Project.\n",
-            //    GeneralContents = "The lab is a large, well lit room, and staffed " +
-            //        "by a small number of scientists, all wearing light blue uniforms with the " +
-            //        "hydra-like Norlan Corporation logo. \n",
-            //    Accessable = true,
-            //    ExperiencePoints = 10
-            //},
-
-            //new World
-            //{
-            //    CommonName = "Felandrian Plains",
-            //    SpaceTimeLocationID = 2,
-            //    UniversalDate = 386759,
-            //    UniversalLocation = "P-2, SS-85, G-2976, LS-3976",
-            //    Description = "The Felandrian Plains are a common destination for tourist. " +
-            //        "Located just north of the equatorial line on the planet of Corlon, they " +
-            //        "provide excellent habitat for a rich ecosystem of flora and fauna.",
-            //    GeneralContents = "- stuff in the room -",
-            //    Accessable = true,
-            //    ExperiencePoints = 10
-            //},
-
-            //new World
-            //{
-            //    CommonName = "Xantoria Market",
-            //    SpaceTimeLocationID = 3,
-            //    UniversalDate = 386759,
-            //    UniversalLocation = "P-6, SS-3978, G-2976, LS-3976",
-            //    Description = "The Xantoria market, once controlled by the Thorian elite, is now an " +
-            //                  "open market managed by the Xantorian Commerce Coop. It is a place " +
-            //                  "where many races from various systems trade goods.",
-            //    GeneralContents = "- stuff in the room -",
-            //    Accessable = true,
-            //    ExperiencePoints = 20
-            //},
-
-            //new World
-            //{
-            //    CommonName = "Norlon Corporate Headquarters",
-            //    SpaceTimeLocationID = 4,
-            //    UniversalDate = 386759,
-            //    UniversalLocation = "P-3, SS-278, G-2976, LS-3976",
-            //    Description = "The Norlon Corporation Headquarters is located in just outside of Detroit Michigan." +
-            //                  "Norlon, founded in 1985 as a bio-tech company, is now a 36 billion dollar company " +
-            //                  "with huge holdings in defense and space research and development.",
-            //    GeneralContents = "- stuff in the room -",
-            //    Accessable = true,
-            //    ExperiencePoints = 10
-            //}
+            new World
+            {
+                CommonName = "Cimmeria",
+                PlanetDesignation = "P3X-974",
+                UniversalLocation = "P-11, SS-278, G-2976, LS-3976",
+                Description = " " + " \n",
+                GeneralContents = " " + " \n",
+                Accessable = true,
+                Visible = false,
+            },
         };
     }
 }

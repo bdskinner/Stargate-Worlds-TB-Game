@@ -15,7 +15,7 @@ namespace StargateWorlds
         // console window configuration
         //
         public static int WindowWidth = 160;
-        public static int WindowHeight = 35;
+        public static int WindowHeight = 45;
         public static int WindowPositionLeft = 0;
         public static int WindowPositionTop = 0;
 
@@ -37,13 +37,13 @@ namespace StargateWorlds
         //       the number of lines of text displayed by the footer should not change.
         public static int FooterWidth = 160;
         public static int FooterPositionLeft = 0;
-        public static int FooterPositionTop = 32;
+        public static int FooterPositionTop = 42;
 
         //
         // menu box configuration
         //
         public static int MenuBoxWidth = 37;
-        public static int MenuBoxHeight = 20;
+        public static int MenuBoxHeight = 30;
         public static int MenuBoxPositionLeft = 122;
         public static int MenuBoxPositionTop = 3;
 
@@ -51,7 +51,7 @@ namespace StargateWorlds
         // message box configuration
         //
         public static int MessageBoxWidth = 120;
-        public static int MessageBoxHeight = 25;
+        public static int MessageBoxHeight = 35;
         public static int MessageBoxPositionLeft = 1;
         public static int MessageBoxPositionTop = 3;
 
@@ -61,7 +61,7 @@ namespace StargateWorlds
         public static int InputBoxWidth = 120;
         public static int InputBoxHeight = 4;
         public static int InputBoxPositionLeft = 1;
-        public static int InputBoxPositionTop = 28;
+        public static int InputBoxPositionTop = 38;
 
         //
         // status box configuration
@@ -69,6 +69,6 @@ namespace StargateWorlds
         public static int StatusBoxWidth = 37;
         public static int StatusBoxHeight = 9;
         public static int StatusBoxPositionLeft = 122;
-        public static int StatusBoxPositionTop = 23;
+        public static int StatusBoxPositionTop = 33;
     }
 }

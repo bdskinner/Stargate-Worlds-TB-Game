@@ -35,6 +35,8 @@ namespace StargateWorlds
 
         #region PROPERTIES
 
+
+
         #endregion
 
         #region CONSTRUCTORS
@@ -53,6 +55,93 @@ namespace StargateWorlds
         #endregion
 
         #region METHODS
+
+        /// <summary>
+        /// clear the input box
+        /// </summary>
+        private void ClearInputBox()
+        {
+            string backgroundColorString = new String(' ', ConsoleLayout.InputBoxWidth - 4);
+
+            Console.ForegroundColor = ConsoleTheme.InputBoxBackgroundColor;
+            for (int row = 1; row < ConsoleLayout.InputBoxHeight - 2; row++)
+            {
+                Console.SetCursorPosition(ConsoleLayout.InputBoxPositionLeft + 4, ConsoleLayout.InputBoxPositionTop + row);
+                DisplayInputBoxPrompt(backgroundColorString);
+            }
+            Console.ForegroundColor = ConsoleTheme.InputBoxForegroundColor;
+        }
+
+        /// <summary>
+        /// Clears the text from the Status Box area of the screen.
+        /// </summary>
+        public void ClearStatusBox()
+        {
+            Console.BackgroundColor = ConsoleTheme.InputBoxBackgroundColor;
+            Console.ForegroundColor = ConsoleTheme.InputBoxBorderColor;
+
+            //
+            // display the outline for the status box
+            //
+            ConsoleWindowHelper.DisplayBoxOutline(
+                ConsoleLayout.StatusBoxPositionTop,
+                ConsoleLayout.StatusBoxPositionLeft,
+                ConsoleLayout.StatusBoxWidth,
+                ConsoleLayout.StatusBoxHeight);
+
+            //
+            // display the text for the status box if playing game
+            //
+            if (_viewStatus == ViewStatus.PlayingGame)
+            {
+                //
+                // display status box header with title
+                //
+                Console.BackgroundColor = ConsoleTheme.StatusBoxBorderColor;
+                Console.ForegroundColor = ConsoleTheme.StatusBoxForegroundColor;
+                Console.SetCursorPosition(ConsoleLayout.StatusBoxPositionLeft + 2, ConsoleLayout.StatusBoxPositionTop + 1);
+                Console.Write(ConsoleWindowHelper.Center("Game Stats", ConsoleLayout.StatusBoxWidth - 4));
+                Console.BackgroundColor = ConsoleTheme.StatusBoxBackgroundColor;
+                Console.ForegroundColor = ConsoleTheme.StatusBoxForegroundColor;
+
+                //
+                // clear the status box
+                //
+                Console.ForegroundColor = ConsoleTheme.StatusBoxBackgroundColor;
+                int startingRow = ConsoleLayout.StatusBoxPositionTop + 3;
+                int row = startingRow;
+                foreach (string statusTextLine in Text.StatusBox(_gameTraveler, _gameUniverse))
+                {
+                    Console.SetCursorPosition(ConsoleLayout.StatusBoxPositionLeft + 3, row);
+                    Console.Write(statusTextLine);
+                    row++;
+                }
+                Console.ForegroundColor = ConsoleTheme.StatusBoxForegroundColor;
+            }
+            else
+            {
+                //
+                // display status box header without header
+                //
+                Console.BackgroundColor = ConsoleTheme.StatusBoxBorderColor;
+                Console.ForegroundColor = ConsoleTheme.StatusBoxForegroundColor;
+                Console.SetCursorPosition(ConsoleLayout.StatusBoxPositionLeft + 2, ConsoleLayout.StatusBoxPositionTop + 1);
+                Console.Write(ConsoleWindowHelper.Center("", ConsoleLayout.StatusBoxWidth - 4));
+                Console.BackgroundColor = ConsoleTheme.StatusBoxBackgroundColor;
+                Console.ForegroundColor = ConsoleTheme.StatusBoxForegroundColor;
+            }
+        }
+
+        /// <summary>
+        /// Displays a closing message on the screen.
+        /// </summary>
+        public void DisplayClosingScreen()
+        {
+            //Display a closing message on the screen.
+            _viewStatus = ViewStatus.TravelerInitialization;
+            DisplayGamePlayScreen("Exit Game", Text.ClosingScreen(), ActionMenu.MissionIntro, "");
+            GetContinueKey();
+        }
 
         /// <summary>
         /// display all of the elements on the game play screen on the console
@@ -135,62 +224,61 @@ namespace StargateWorlds
         }
 
         /// <summary>
+        /// draw the input box on the game screen
+        /// </summary>
+        public void DisplayInputBox()
+        {
+            Console.BackgroundColor = ConsoleTheme.InputBoxBackgroundColor;
+            Console.ForegroundColor = ConsoleTheme.InputBoxBorderColor;
+
+            ConsoleWindowHelper.DisplayBoxOutline(
+                ConsoleLayout.InputBoxPositionTop,
+                ConsoleLayout.InputBoxPositionLeft,
+                ConsoleLayout.InputBoxWidth,
+                ConsoleLayout.InputBoxHeight);
+        }
+
+        /// <summary>
+        /// display the prompt in the input box of the game screen
+        /// </summary>
+        /// <param name="prompt"></param>
+        public void DisplayInputBoxPrompt(string prompt)
+        {
+            Console.SetCursorPosition(ConsoleLayout.InputBoxPositionLeft + 4, ConsoleLayout.InputBoxPositionTop + 1);
+            Console.ForegroundColor = ConsoleTheme.InputBoxForegroundColor;
+            Console.Write(prompt);
+            Console.CursorVisible = true;
+        }
+
+        /// <summary>
+        /// display the error message in the input box of the game screen
+        /// </summary>
+        /// <param name="errorMessage">error message text</param>
+        public void DisplayInputErrorMessage(string errorMessage)
+        {
+            Console.SetCursorPosition(ConsoleLayout.InputBoxPositionLeft + 4, ConsoleLayout.InputBoxPositionTop + 2);
+            Console.ForegroundColor = ConsoleTheme.InputBoxErrorMessageForegroundColor;
+            Console.Write(errorMessage);
+            Console.ForegroundColor = ConsoleTheme.InputBoxForegroundColor;
+            Console.CursorVisible = true;
+        }
+
+        /// <summary>
         /// Displays a list of all game objects on the screen.
         /// </summary>
         public void DisplayListOfGameObjects()
         {
-            //Display a list of all the game objects in the Message Box area of the screen.
-            //DisplayGamePlayScreen("List of Game Objects", Text.GetAllGameObjects(_gameUniverse.GameObjects), ActionMenu.MainMenu, "");            
+            //Display a list of all the game objects in the Message Box area of the screen.          
             DisplayGamePlayScreen("List of Game Objects", Text.GetAllGameObjects(_gameUniverse.GameObjects), ActionMenu.AdminMenu, "");
         }
 
         /// <summary>
-        /// Displays the traveler's current inventory in the Message Box area of the screen.
+        /// Displays a list of all npc objects on the screen.
         /// </summary>
-        public void DisplayTravelerInventory()
+        public void DisplayListOfNpcObjects()
         {
-            //Variable Declarations.
-            List<TravelerObject> travelerInventory = new List<TravelerObject>();
-            
-            //Look through the game objects and add any with a zero(0) planet designation to the traveler's inventory list.
-            foreach (GameObject gameObject in _gameUniverse.GameObjects)
-            {
-                if (gameObject.PlanetDesignation == "0")
-                {
-                    travelerInventory.Add((TravelerObject)gameObject);
-                }
-            }
-
-            //Display the object's informaton to the Message Box area of the screen.
-            DisplayGamePlayScreen("Traveler Inventory", Text.GetCurrentInventory(travelerInventory), ActionMenu.InventoryMenu, ""); 
-        }
-
-        /// <summary>
-        /// Gets the world the player would like to go to next.
-        /// </summary>
-        public string GetWorldToTravelTo()
-        {
-            //Display the list of worlds.
-            DisplayGamePlayScreen("Travel to World", Text.TravelToWorld(_gameUniverse, _gameTraveler), ActionMenu.TravelMenu, "");
-            DisplayInputBoxPrompt($"Enter Number for World: ");
-
-            //Get the planet designation of the world the player wants to travel to.
-            //GetInteger("Enter Number of World: ", 1, _gameUniverse.Worlds.Count, out worldChoice);
-            DisplayInputBoxPrompt("Enter the Designation: ");
-            
-            //Return the planet designation of the world choosen by the user.
-            return GetString();
-        }
-
-        /// <summary>
-        /// Displays a list of worlds that the traveler has visited in the Message Box area of the screen.
-        /// </summary>
-        /// <returns></returns>
-        public void DisplayWorldsVisited()
-        {
-            //Display the list of worlds that the player has visited.
-            //DisplayGamePlayScreen("Worlds Visited", Text.WorldsVisited(_gameUniverse, _gameTraveler), ActionMenu.MainMenu, "");
-            DisplayGamePlayScreen("Worlds Visited", Text.WorldsVisited(_gameUniverse, _gameTraveler), ActionMenu.AdminMenu, "");
+            //Display a list of all the game objects in the Message Box area of the screen.           
+            DisplayGamePlayScreen("List of Non-playable Characters", Text.GetAllNpcObjects(_gameUniverse.Npc), ActionMenu.AdminMenu, "");
         }
 
         /// <summary>
@@ -198,254 +286,31 @@ namespace StargateWorlds
         /// </summary>
         public void DislayListOfWorlds()
         {
-            //DisplayGamePlayScreen("List of Worlds", Text.DisplayWorlds(_gameUniverse, _gameTraveler, true), ActionMenu.MainMenu, "");
             DisplayGamePlayScreen("List of Worlds", Text.DisplayWorlds(_gameUniverse, _gameTraveler, true), ActionMenu.AdminMenu, "");
         }
-
+        
         /// <summary>
-        /// wait for any keystroke to continue
+        /// Displays a description of the player's current location on the screen.
         /// </summary>
-        public void GetContinueKey()
-        {
-            Console.ReadKey();
-        }
-
-        /// <summary>
-        /// get a action menu choice from the user
-        /// </summary>
-        /// <returns>action menu choice</returns>
-        public TravelerAction GetActionMenuChoice(Menu menu)
+        public void DisplayLookAround()
         {
             //Variable Declarations.
-            TravelerAction choosenAction = TravelerAction.None;
-            Console.CursorVisible = false;
+            string messageText = "";
 
-            //Create an array of valid keys from the menu dictionary.
-            char[] validKeys = menu.MenuChoices.Keys.ToArray();
+            //Get the description of the player's current location.
+            messageText = Text.LookAround(_gameUniverse.GetWorldByID(_gameTraveler.CurrentPlanet));
 
-            //Validate key pressed as in MenuChoices dictionary.
-            char keyPressed;
-            do
-            {
-                ConsoleKeyInfo KeyPressedInfo = Console.ReadKey(true);
-                keyPressed = KeyPressedInfo.KeyChar;
-            } while (!validKeys.Contains(keyPressed));
+            //Get a list of game objects that are in the player's current location.
+            messageText += Text.GetWorldGameObjects(_gameUniverse.GetGameObjectsByWorld(_gameTraveler.CurrentPlanet));
 
-            //Get the menu choice based on the valid option entered by the player.
-            choosenAction = menu.MenuChoices[keyPressed];
-            Console.CursorVisible = true;
+            //Get a list of npc objects that are in the player's current location.
+            messageText += " \n";
+            messageText += Text.GetWorldNpcObjects(_gameUniverse.GetNpcsByWorld(_gameTraveler.CurrentPlanet));
 
-            //Return the menu choice.
-            return choosenAction;
+            //Display the description of the player's current location in the Message Box area of the screen.
+            DisplayGamePlayScreen("Current Location", messageText, ActionMenu.TravelMenu, "");
         }
-
-        /// <summary>
-        /// get a string value from the user
-        /// </summary>
-        /// <returns>string value</returns>
-        public string GetString()
-        {
-            return Console.ReadLine();
-        }
-
-        /// <summary>
-        /// get an integer value from the user
-        /// </summary>
-        /// <returns>integer value</returns>
-        public bool GetInteger(string prompt, int minimumValue, int maximumValue, out int integerChoice)
-        {
-            //Variable Declarations.
-            integerChoice = 0;
-            bool validateRange = false;
-            bool validResponse = false;
-
-            //If the min and max values are not zero, validate the range.
-            validateRange = (minimumValue != 0 && maximumValue != 0);
-
-            //Prompt the user to enter an integer value.
-            DisplayInputBoxPrompt(prompt);
-
-            //Validate the user's response.
-            while (!validResponse)
-            {
-                if (int.TryParse(Console.ReadLine(), out integerChoice))
-                {
-                    if (validateRange == true)
-                    {
-                        if (integerChoice >= minimumValue && integerChoice <= maximumValue)
-                        {
-                            validResponse = true;
-                        }
-                        else
-                        {
-                            ClearInputBox();
-                            DisplayInputErrorMessage($"You must enter an integer value between {minimumValue} and {maximumValue}. Please try again.");
-                            DisplayInputBoxPrompt(prompt);
-                        }
-                    }
-                    else
-                    {
-                        validResponse = true;
-                    }
-                }
-                else
-                {
-                    ClearInputBox();
-                    DisplayInputErrorMessage($"You must enter an integer value between {minimumValue} and {maximumValue}. Please try again.");
-                    DisplayInputBoxPrompt(prompt);
-                }
-            }
-
-            return true;
-        }
-
-        /// <summary>
-        /// get a character race value from the user
-        /// </summary>
-        /// <returns>character race value</returns>
-        //public Character.RaceType GetRace()
-        //{
-        //    Character.RaceType raceType;
-        //    Enum.TryParse<Character.RaceType>(Console.ReadLine(), out raceType);
-
-        //    return raceType;
-        //}
-
-        public Character.HeightLevel GetHeight(string prompt)
-        {
-            //Variable Declarations.
-            Character.HeightLevel height;            
-
-            //Validate the height of the traveler entered by the user.
-            while (!Enum.TryParse<Character.HeightLevel>(Console.ReadLine(), out height))
-            {
-                ClearInputBox();
-                DisplayInputErrorMessage($"You must enter a value from the list above.  Please try again.");
-                DisplayInputBoxPrompt(prompt);
-            } 
-            
-            //Return the height value.
-            return height;
-        }
-
-        /// <summary>
-        /// display splash screen
-        /// </summary>
-        /// <returns>player chooses to play</returns>
-        public bool DisplaySpashScreen()
-        {
-            bool playing = true;
-            ConsoleKeyInfo keyPressed;
-
-            Console.BackgroundColor = ConsoleTheme.SplashScreenBackgroundColor;
-            Console.ForegroundColor = ConsoleTheme.SplashScreenForegroundColor;
-            Console.Clear();
-            Console.CursorVisible = false;
-
-
-            Console.SetCursorPosition(0, 10);
-            string tabSpace = new String(' ', 35);           
-            Console.WriteLine(tabSpace + @"  _________ __                             __              __      __            .__       .___     ");
-            Console.WriteLine(tabSpace + @" /   _____//  |______ _______  _________ _/  |_  ____     /  \    /  \___________|  |    __| _/______");
-            Console.WriteLine(tabSpace + @" \_____  \\   __\__  \\_  __ \/ ___\__  \\   __\/ __ \    \   \/\/   /  _ \_  __ \  |   / __ |/  ___/");
-            Console.WriteLine(tabSpace + @" /        \|  |  / __ \|  | \/ /_/  > __ \|  | \  ___/     \        (  <_> )  | \/  |__/ /_/ |\___ \ ");
-            Console.WriteLine(tabSpace + @"/_______  /|__| (____  /__|  \___  (____  /__|  \___  >     \__/\  / \____/|__|  |____/\____ /____  >");
-            Console.WriteLine(tabSpace + @"        \/           \/     /_____/     \/          \/           \/                         \/    \/ ");
-            Console.WriteLine(tabSpace + @"");
-            Console.WriteLine(tabSpace + @"");
-
-            Console.SetCursorPosition(80, 25);
-            Console.Write("Press any key to continue or Esc to exit.");
-            keyPressed = Console.ReadKey();
-            if (keyPressed.Key == ConsoleKey.Escape)
-            {
-                playing = false;
-            }
-
-            return playing;
-        }
-
-        /// <summary>
-        /// Clears the text from the Status Box area of the screen.
-        /// </summary>
-        public void ClearStatusBox()
-        {
-            Console.BackgroundColor = ConsoleTheme.InputBoxBackgroundColor;
-            Console.ForegroundColor = ConsoleTheme.InputBoxBorderColor;
-
-            //
-            // display the outline for the status box
-            //
-            ConsoleWindowHelper.DisplayBoxOutline(
-                ConsoleLayout.StatusBoxPositionTop,
-                ConsoleLayout.StatusBoxPositionLeft,
-                ConsoleLayout.StatusBoxWidth,
-                ConsoleLayout.StatusBoxHeight);
-
-            //
-            // display the text for the status box if playing game
-            //
-            if (_viewStatus == ViewStatus.PlayingGame)
-            {
-                //
-                // display status box header with title
-                //
-                Console.BackgroundColor = ConsoleTheme.StatusBoxBorderColor;
-                Console.ForegroundColor = ConsoleTheme.StatusBoxForegroundColor;
-                Console.SetCursorPosition(ConsoleLayout.StatusBoxPositionLeft + 2, ConsoleLayout.StatusBoxPositionTop + 1);
-                Console.Write(ConsoleWindowHelper.Center("Game Stats", ConsoleLayout.StatusBoxWidth - 4));
-                Console.BackgroundColor = ConsoleTheme.StatusBoxBackgroundColor;
-                Console.ForegroundColor = ConsoleTheme.StatusBoxForegroundColor;
-
-                //
-                // clear the status box
-                //
-                Console.ForegroundColor = ConsoleTheme.StatusBoxBackgroundColor;
-                int startingRow = ConsoleLayout.StatusBoxPositionTop + 3;
-                int row = startingRow;
-                foreach (string statusTextLine in Text.StatusBox(_gameTraveler, _gameUniverse))
-                {
-                    Console.SetCursorPosition(ConsoleLayout.StatusBoxPositionLeft + 3, row);
-                    Console.Write(statusTextLine);
-                    row++;
-                }
-                Console.ForegroundColor = ConsoleTheme.StatusBoxForegroundColor;
-            }
-            else
-            {
-                //
-                // display status box header without header
-                //
-                Console.BackgroundColor = ConsoleTheme.StatusBoxBorderColor;
-                Console.ForegroundColor = ConsoleTheme.StatusBoxForegroundColor;
-                Console.SetCursorPosition(ConsoleLayout.StatusBoxPositionLeft + 2, ConsoleLayout.StatusBoxPositionTop + 1);
-                Console.Write(ConsoleWindowHelper.Center("", ConsoleLayout.StatusBoxWidth - 4));
-                Console.BackgroundColor = ConsoleTheme.StatusBoxBackgroundColor;
-                Console.ForegroundColor = ConsoleTheme.StatusBoxForegroundColor;
-            }
-        }
-
-        /// <summary>
-        /// initialize the console window settings
-        /// </summary>
-        private static void InitializeDisplay()
-        {
-            //
-            // control the console window properties
-            //
-            ConsoleWindowControl.DisableResize();
-            ConsoleWindowControl.DisableMaximize();
-            ConsoleWindowControl.DisableMinimize();
-            Console.Title = "Stargate Worlds";
-
-            //
-            // set the default console window values
-            //
-            ConsoleWindowHelper.InitializeConsoleWindow();
-
-            Console.CursorVisible = false;
-        }
-
+        
         /// <summary>
         /// display the correct menu in the menu box of the game screen
         /// </summary>
@@ -537,64 +402,73 @@ namespace StargateWorlds
         }
 
         /// <summary>
-        /// draw the input box on the game screen
+        /// Displays the NPC information in the Message Box area of the screen.
         /// </summary>
-        public void DisplayInputBox()
-        {
-            Console.BackgroundColor = ConsoleTheme.InputBoxBackgroundColor;
-            Console.ForegroundColor = ConsoleTheme.InputBoxBorderColor;
-
-            ConsoleWindowHelper.DisplayBoxOutline(
-                ConsoleLayout.InputBoxPositionTop,
-                ConsoleLayout.InputBoxPositionLeft,
-                ConsoleLayout.InputBoxWidth,
-                ConsoleLayout.InputBoxHeight);
-        }
-
-        /// <summary>
-        /// display the prompt in the input box of the game screen
-        /// </summary>
-        /// <param name="prompt"></param>
-        public void DisplayInputBoxPrompt(string prompt)
-        {
-            Console.SetCursorPosition(ConsoleLayout.InputBoxPositionLeft + 4, ConsoleLayout.InputBoxPositionTop + 1);
-            Console.ForegroundColor = ConsoleTheme.InputBoxForegroundColor;
-            Console.Write(prompt);
-            Console.CursorVisible = true;
-        }
-
-        /// <summary>
-        /// display the error message in the input box of the game screen
-        /// </summary>
-        /// <param name="errorMessage">error message text</param>
-        public void DisplayInputErrorMessage(string errorMessage)
-        {
-            Console.SetCursorPosition(ConsoleLayout.InputBoxPositionLeft + 4, ConsoleLayout.InputBoxPositionTop + 2);
-            Console.ForegroundColor = ConsoleTheme.InputBoxErrorMessageForegroundColor;
-            Console.Write(errorMessage);
-            Console.ForegroundColor = ConsoleTheme.InputBoxForegroundColor;
-            Console.CursorVisible = true;
-        }
-
-        /// <summary>
-        /// Displays a description of the player's current location on the screen.
-        /// </summary>
-        public void DisplayLookAround()
+        public void DisplayNpcInformation()
         {
             //Variable Declarations.
-            string messageText = "";
+            int npcID = 0;
+            Npc npcToDisplay;
 
-            //Display the description of the player's current location in the Message Box area of the screen.
-            //DisplayGamePlayScreen("Current Location", Text.LookAround(_gameUniverse.GetWorldByID(_gameTraveler.CurrentPlanet)), ActionMenu.MainMenu, "");
+            //Get the NPC information.
+            npcID = GetNpcID();
 
-            //Get the description of the player's current location.
-            messageText = Text.LookAround(_gameUniverse.GetWorldByID(_gameTraveler.CurrentPlanet));
+            //Check to see if the NPC ID value entered by the player is valid.
+            if (_gameUniverse.IsValidNpcByWorldID(npcID, _gameTraveler.CurrentPlanet) == true)
+            {
+                //NPC is valid for the current world...
 
-            //Get a list of game objects that are in the player's current location.
-            messageText += Text.GetWorldGameObjects(_gameUniverse.GetGameObjectsByWorld(_gameTraveler.CurrentPlanet));
+                //Get the NPC information.
+                npcToDisplay = _gameUniverse.GetNpcObjectByID(npcID);
 
-            //Display the description of the player's current location in the Message Box area of the screen.
-            DisplayGamePlayScreen("Current Location", messageText, ActionMenu.TravelMenu, "");
+                //Display the NPC information in the Message Box area of the screen.
+                DisplayGamePlayScreen("NPC Information", Text.DisplayNpcInformation(npcToDisplay), ActionMenu.NpcMenu, "");
+            }
+            else
+            {
+                //NPC is not valid for the current world...
+
+                DisplayInputErrorMessage("The NPC ID value you have entered does not exist.  Press any key to continue.");
+                Console.ReadKey();
+                DisplayGamePlayScreen("NPC Menu", "Select an operation from the menu.", ActionMenu.NpcMenu, "");
+            }
+        }
+
+        /// <summary>
+        /// display splash screen
+        /// </summary>
+        /// <returns>player chooses to play</returns>
+        public bool DisplaySpashScreen()
+        {
+            bool playing = true;
+            ConsoleKeyInfo keyPressed;
+
+            Console.BackgroundColor = ConsoleTheme.SplashScreenBackgroundColor;
+            Console.ForegroundColor = ConsoleTheme.SplashScreenForegroundColor;
+            Console.Clear();
+            Console.CursorVisible = false;
+
+
+            Console.SetCursorPosition(0, 10);
+            string tabSpace = new String(' ', 35);
+            Console.WriteLine(tabSpace + @"  _________ __                             __              __      __            .__       .___     ");
+            Console.WriteLine(tabSpace + @" /   _____//  |______ _______  _________ _/  |_  ____     /  \    /  \___________|  |    __| _/______");
+            Console.WriteLine(tabSpace + @" \_____  \\   __\__  \\_  __ \/ ___\__  \\   __\/ __ \    \   \/\/   /  _ \_  __ \  |   / __ |/  ___/");
+            Console.WriteLine(tabSpace + @" /        \|  |  / __ \|  | \/ /_/  > __ \|  | \  ___/     \        (  <_> )  | \/  |__/ /_/ |\___ \ ");
+            Console.WriteLine(tabSpace + @"/_______  /|__| (____  /__|  \___  (____  /__|  \___  >     \__/\  / \____/|__|  |____/\____ /____  >");
+            Console.WriteLine(tabSpace + @"        \/           \/     /_____/     \/          \/           \/                         \/    \/ ");
+            Console.WriteLine(tabSpace + @"");
+            Console.WriteLine(tabSpace + @"");
+
+            Console.SetCursorPosition(80, 25);
+            Console.Write("Press any key to continue or Esc to exit.");
+            keyPressed = Console.ReadKey();
+            if (keyPressed.Key == ConsoleKey.Escape)
+            {
+                playing = false;
+            }
+
+            return playing;
         }
 
         /// <summary>
@@ -627,7 +501,7 @@ namespace StargateWorlds
                 Console.SetCursorPosition(ConsoleLayout.StatusBoxPositionLeft + 2, ConsoleLayout.StatusBoxPositionTop + 1);
                 Console.Write(ConsoleWindowHelper.Center("Game Stats", ConsoleLayout.StatusBoxWidth - 4));
                 Console.BackgroundColor = ConsoleTheme.StatusBoxBackgroundColor;
-                Console.ForegroundColor = ConsoleTheme.StatusBoxForegroundColor;                
+                Console.ForegroundColor = ConsoleTheme.StatusBoxForegroundColor;
 
                 //
                 // display stats
@@ -653,22 +527,96 @@ namespace StargateWorlds
                 Console.BackgroundColor = ConsoleTheme.StatusBoxBackgroundColor;
                 Console.ForegroundColor = ConsoleTheme.StatusBoxForegroundColor;
             }
-        }        
+        }
 
         /// <summary>
-        /// clear the input box
+        /// Displays the traveler's current inventory in the Message Box area of the screen.
         /// </summary>
-        private void ClearInputBox()
+        public void DisplayTravelerInventory()
         {
-            string backgroundColorString = new String(' ', ConsoleLayout.InputBoxWidth - 4);
-
-            Console.ForegroundColor = ConsoleTheme.InputBoxBackgroundColor;
-            for (int row = 1; row < ConsoleLayout.InputBoxHeight - 2; row++)
+            //Variable Declarations.
+            List<TravelerObject> travelerInventory = new List<TravelerObject>();
+            
+            //Look through the game objects and add any with a zero(0) planet designation to the traveler's inventory list.
+            foreach (GameObject gameObject in _gameUniverse.GameObjects)
             {
-                Console.SetCursorPosition(ConsoleLayout.InputBoxPositionLeft + 4, ConsoleLayout.InputBoxPositionTop + row);
-                DisplayInputBoxPrompt(backgroundColorString);
+                if (gameObject.PlanetDesignation == "0")
+                {
+                    travelerInventory.Add((TravelerObject)gameObject);
+                }
             }
-            Console.ForegroundColor = ConsoleTheme.InputBoxForegroundColor;
+
+            //Display the object's informaton to the Message Box area of the screen.
+            DisplayGamePlayScreen("Traveler Inventory", Text.GetCurrentInventory(travelerInventory), ActionMenu.InventoryMenu, ""); 
+        }
+
+        /// <summary>
+        /// Displays a list of worlds that the traveler has visited in the Message Box area of the screen.
+        /// </summary>
+        /// <returns></returns>
+        public void DisplayWorldsVisited()
+        {
+            //Display the list of worlds that the player has visited.
+            DisplayGamePlayScreen("Worlds Visited", Text.WorldsVisited(_gameUniverse, _gameTraveler), ActionMenu.AdminMenu, "");
+        }
+
+        /// <summary>
+        /// get a action menu choice from the user
+        /// </summary>
+        /// <returns>action menu choice</returns>
+        public TravelerAction GetActionMenuChoice(Menu menu)
+        {
+            //Variable Declarations.
+            TravelerAction choosenAction = TravelerAction.None;
+            Console.CursorVisible = false;
+
+            //Create an array of valid keys from the menu dictionary.
+            char[] validKeys = menu.MenuChoices.Keys.ToArray();
+
+            //Validate key pressed as in MenuChoices dictionary.
+            char keyPressed;
+            do
+            {
+                ConsoleKeyInfo KeyPressedInfo = Console.ReadKey(true);
+                keyPressed = KeyPressedInfo.KeyChar;
+            } while (!validKeys.Contains(keyPressed));
+
+            //Get the menu choice based on the valid option entered by the player.
+            choosenAction = menu.MenuChoices[keyPressed];
+            Console.CursorVisible = true;
+
+            //Return the menu choice.
+            return choosenAction;
+        }
+
+        /// <summary>
+        /// wait for any keystroke to continue
+        /// </summary>
+        public void GetContinueKey()
+        {
+            Console.ReadKey();
+        }
+
+        /// <summary>
+        /// Prompt the player to enter their height (based on list generated from an enum).
+        /// </summary>
+        /// <param name="prompt"></param>
+        /// <returns></returns>
+        public Character.HeightLevel GetHeight(string prompt)
+        {
+            //Variable Declarations.
+            Character.HeightLevel height;
+
+            //Validate the height of the traveler entered by the user.
+            while (!Enum.TryParse<Character.HeightLevel>(Console.ReadLine(), out height))
+            {
+                ClearInputBox();
+                DisplayInputErrorMessage($"You must enter a value from the list above.  Please try again.");
+                DisplayInputBoxPrompt(prompt);
+            }
+
+            //Return the height value.
+            return height;
         }
 
         /// <summary>
@@ -680,8 +628,8 @@ namespace StargateWorlds
             //Variable Declarations.
             Traveler traveler = new Traveler();
             Random rnd = new Random();
-            int lucky = rnd.Next(1, 11); 
-            int quick = rnd.Next(1, 11);   
+            int lucky = rnd.Next(1, 11);
+            int quick = rnd.Next(1, 11);
 
             //
             // intro
@@ -744,15 +692,6 @@ namespace StargateWorlds
             //Set the traveler's current planet (Earth).
             traveler.CurrentPlanet = "P2X-3YZ";
 
-
-
-            ////
-            //// get traveler's race
-            ////
-            //DisplayGamePlayScreen("Mission Initialization - Race", Text.InitializeMissionGetTravelerRace(traveler), ActionMenu.MissionIntro, "");
-            //DisplayInputBoxPrompt($"Enter your race {traveler.Name}: ");
-            //traveler.Race = GetRace();
-
             //
             // echo the traveler's info
             //
@@ -761,38 +700,190 @@ namespace StargateWorlds
 
             _viewStatus = ViewStatus.PlayingGame;
 
+            //Return the traveler's information.
             return traveler;
         }
 
         /// <summary>
-        /// Displays a closing message on the screen.
+        /// get an integer value from the user
         /// </summary>
-        public void DisplayClosingScreen()
+        /// <returns>integer value</returns>
+        public bool GetInteger(string prompt, int minimumValue, int maximumValue, out int integerChoice)
         {
-            //Display a closing message on the screen.
-            _viewStatus = ViewStatus.TravelerInitialization;
-            DisplayGamePlayScreen("Exit Game", Text.ClosingScreen(), ActionMenu.MissionIntro, "");
-            GetContinueKey();
+            //Variable Declarations.
+            integerChoice = 0;
+            bool validateRange = false;
+            bool validResponse = false;
+
+            //If the min and max values are not zero, validate the range.
+            //validateRange = (minimumValue != 0 && maximumValue != 0);
+            if (minimumValue == 0 && maximumValue == 0)
+            {
+                //Validate Range...
+                validateRange = false;
+            }
+            else
+            {
+                validateRange = true;
+            }
+
+            //Prompt the user to enter an integer value.
+            DisplayInputBoxPrompt(prompt);
+
+            //Validate the user's response.
+            while (!validResponse)
+            {
+                if (int.TryParse(Console.ReadLine(), out integerChoice))
+                {
+                    //The value entered is a valid integer...
+
+                    if (validateRange == true)
+                    {
+                        //Check to make sure the integer entered is within the specified range...
+
+                        if (integerChoice >= minimumValue && integerChoice <= maximumValue)
+                        {
+                            //The integer entered is within the specified range...
+
+                            validResponse = true;
+                        }
+                        else
+                        {
+                            //The integer entered is not within the specified range...
+
+                            //Display an error message in the Input Box area of the screen.
+                            ClearInputBox();
+                            DisplayInputErrorMessage($"You must enter an integer value between {minimumValue} and {maximumValue}. Please try again.");
+                            DisplayInputBoxPrompt(prompt);
+                        }
+                    }
+                    else
+                    {
+                        //Do not check to make sure the integer entered is within the specified range...
+
+                        validResponse = true;
+                    }
+                }
+                else
+                {
+                    //Not a valid integer...
+
+                    //Display an error message in the Input Box area of the screen.
+                    ClearInputBox();
+                    DisplayInputErrorMessage($"You must enter a valid integer. Please try again.");
+                    DisplayInputBoxPrompt(prompt);
+                }
+            }
+
+            return true;
         }
+
+        /// <summary>
+        /// Prompt the player for the id value of the npc they want to get informatio about.
+        /// </summary>
+        /// <returns></returns>
+        public int GetNpcID()
+        {
+            //Varaible Declarations.
+            int npcID = 0;
+
+            //Display the list of all NPC's on the current world.
+            DisplayGamePlayScreen("Travel to World", Text.GetNpcInformation(_gameTraveler.CurrentPlanet, _gameUniverse), ActionMenu.NpcMenu, "");
+            DisplayInputBoxPrompt("Enter NPC ID: ");
+
+            //Get the ID value for the NPC the player wants to get more information about.
+            DisplayInputBoxPrompt("Enter NPC ID: ");
+
+            //Return the planet designation of the world choosen by the user.
+            GetInteger("Enter NPC ID: ", 0, 0, out npcID);
+            return npcID;
+        }
+
+        /// <summary>
+        /// get a string value from the user
+        /// </summary>
+        /// <returns>string value</returns>
+        public string GetString()
+        {
+            return Console.ReadLine();
+        }
+
+        /// <summary>
+        /// Gets the world the player would like to go to next.
+        /// </summary>
+        public string GetWorldToTravelTo()
+        {
+            //Display the list of worlds.
+            DisplayGamePlayScreen("Travel to World", Text.TravelToWorld(_gameUniverse, _gameTraveler), ActionMenu.TravelMenu, "");
+            DisplayInputBoxPrompt($"Enter Number for World: ");
+
+            //Get the planet designation of the world the player wants to travel to.
+            //GetInteger("Enter Number of World: ", 1, _gameUniverse.Worlds.Count, out worldChoice);
+            DisplayInputBoxPrompt("Enter the Designation: ");
+            
+            //Return the planet designation of the world choosen by the user.
+            return GetString();
+        }
+        
+        /// <summary>
+        /// initialize the console window settings
+        /// </summary>
+        private static void InitializeDisplay()
+        {
+            //
+            // control the console window properties
+            //
+            ConsoleWindowControl.DisableResize();
+            ConsoleWindowControl.DisableMaximize();
+            ConsoleWindowControl.DisableMinimize();
+            Console.Title = "Stargate Worlds";
+
+            //
+            // set the default console window values
+            //
+            ConsoleWindowHelper.InitializeConsoleWindow();
+
+            Console.CursorVisible = false;
+        }
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        
+
+        
 
         #region ----- display responses to menu action choices -----
 
+        /// <summary>
+        /// Displays the traveler's information in the Message Box area of the screen.
+        /// </summary>
         public void DisplayTravelerInfo()
         {
-            //DisplayGamePlayScreen("Traveler Information", Text.TravelerInfo(_gameTraveler), ActionMenu.MainMenu, "");
             DisplayGamePlayScreen("Traveler Information", Text.TravelerInfo(_gameTraveler), ActionMenu.AdminMenu, "");
         }
 
+        /// <summary>
+        /// Prompts the player to enter new values for the traveler's information.
+        /// </summary>
+        /// <returns></returns>
         public Traveler EditTravelerInfo()
         {
             //Variable Declarations.
             Traveler traveler = new Traveler();
-
-            //
-            // intro
-            //
-            //DisplayGamePlayScreen("Mission Initialization", Text.InitializeMissionIntro(), ActionMenu.MissionIntro, "");
-            //GetContinueKey();
 
             //
             // get traveler's first name

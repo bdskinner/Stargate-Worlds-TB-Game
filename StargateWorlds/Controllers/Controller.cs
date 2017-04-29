@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 
 namespace StargateWorlds
 {
@@ -53,7 +54,7 @@ namespace StargateWorlds
             _gameUniverse = new Universe();
             _gameConsoleView = new ConsoleView(_gameTraveler, _gameUniverse);
             _playingGame = true;
-
+            
             Console.CursorVisible = false;
         }
 
@@ -79,7 +80,6 @@ namespace StargateWorlds
             _gameTraveler.IsLucky = traveler.IsLucky;
             _gameTraveler.IsQuick = traveler.IsQuick;
             _gameTraveler.IsOnNewWorld = false;
-
         }
 
         /// <summary>
@@ -115,43 +115,65 @@ namespace StargateWorlds
             while (_playingGame)
             {
                 //Process all flags, events, and stats.
-                UpdateTravelerStats();   
-
+                UpdateTravelerStats();
+                
                 //Get the player's menu choice.
-                //travelerActionChoice = _gameConsoleView.GetActionMenuChoice(ActionMenu.MainMenu);
-                if (ActionMenu.currentMenu == ActionMenu.CurrentMenu.MainMenu)
+                switch (ActionMenu.currentMenu)
                 {
-                    //travelerActionChoice = _gameConsoleView.GetActionMenuChoice(ActionMenu.MainMenu);
-                    if (_gameTraveler.Health == Traveler.TravelerHealth.Dead)
-                        travelerActionChoice = _gameConsoleView.GetActionMenuChoice(ActionMenu.InitializeMission);
-                    else
-                        travelerActionChoice = _gameConsoleView.GetActionMenuChoice(ActionMenu.MainMenu);
+                    case ActionMenu.CurrentMenu.AdminMenu:
+                        if (_gameTraveler.Health == Traveler.TravelerHealth.Dead)
+                        {
+                            travelerActionChoice = _gameConsoleView.GetActionMenuChoice(ActionMenu.InitializeMission);
+                        }
+                        else
+                        {
+                            travelerActionChoice = _gameConsoleView.GetActionMenuChoice(ActionMenu.AdminMenu);
+                        }
+                        break;
+                    case ActionMenu.CurrentMenu.InventoryMenu:
+                        if (_gameTraveler.Health == Traveler.TravelerHealth.Dead)
+                        {
+                            travelerActionChoice = _gameConsoleView.GetActionMenuChoice(ActionMenu.InitializeMission);
+                        }
+                        else
+                        {
+                            travelerActionChoice = _gameConsoleView.GetActionMenuChoice(ActionMenu.InventoryMenu);
+                        }
+                        break;
+                    case ActionMenu.CurrentMenu.MainMenu:
+                        if (_gameTraveler.Health == Traveler.TravelerHealth.Dead)
+                        {
+                            travelerActionChoice = _gameConsoleView.GetActionMenuChoice(ActionMenu.InitializeMission);
+                        }
+                        else
+                        {
+                            travelerActionChoice = _gameConsoleView.GetActionMenuChoice(ActionMenu.MainMenu);
+                        }
+                        break;
+                    case ActionMenu.CurrentMenu.NpcMenu:
+                        if (_gameTraveler.Health == Traveler.TravelerHealth.Dead)
+                        {
+                            travelerActionChoice = _gameConsoleView.GetActionMenuChoice(ActionMenu.InitializeMission);
+                        }
+                        else
+                        {
+                            travelerActionChoice = _gameConsoleView.GetActionMenuChoice(ActionMenu.NpcMenu);
+                        }
+                        break;
+                    case ActionMenu.CurrentMenu.TravelMenu:
+                        if (_gameTraveler.Health == Traveler.TravelerHealth.Dead)
+                        {
+                            travelerActionChoice = _gameConsoleView.GetActionMenuChoice(ActionMenu.InitializeMission);
+                        }
+                        else
+                        {
+                            travelerActionChoice = _gameConsoleView.GetActionMenuChoice(ActionMenu.TravelMenu);
+                        }
+                        break;
+                    default:
+                        break;
                 }
-                else if(ActionMenu.currentMenu == ActionMenu.CurrentMenu.AdminMenu)
-                {
-                    //travelerActionChoice = _gameConsoleView.GetActionMenuChoice(ActionMenu.AdminMenu);
-                    if (_gameTraveler.Health == Traveler.TravelerHealth.Dead)
-                        travelerActionChoice = _gameConsoleView.GetActionMenuChoice(ActionMenu.InitializeMission);
-                    else
-                        travelerActionChoice = _gameConsoleView.GetActionMenuChoice(ActionMenu.AdminMenu);
-                }
-                else if (ActionMenu.currentMenu == ActionMenu.CurrentMenu.TravelMenu)
-                {
-                    //travelerActionChoice = _gameConsoleView.GetActionMenuChoice(ActionMenu.TravelMenu);
-                    if (_gameTraveler.Health == Traveler.TravelerHealth.Dead)
-                        travelerActionChoice = _gameConsoleView.GetActionMenuChoice(ActionMenu.InitializeMission);
-                    else
-                        travelerActionChoice = _gameConsoleView.GetActionMenuChoice(ActionMenu.TravelMenu);
-                }
-                else if (ActionMenu.currentMenu == ActionMenu.CurrentMenu.InventoryMenu)
-                {
-                    //travelerActionChoice = _gameConsoleView.GetActionMenuChoice(ActionMenu.InventoryMenu);
-                    if (_gameTraveler.Health == Traveler.TravelerHealth.Dead)
-                        travelerActionChoice = _gameConsoleView.GetActionMenuChoice(ActionMenu.InitializeMission);
-                    else
-                        travelerActionChoice = _gameConsoleView.GetActionMenuChoice(ActionMenu.InventoryMenu);
-                }
-
+                
                 //Choose an action based on the user's menu choice.
                 switch (travelerActionChoice)
                 {
@@ -168,6 +190,10 @@ namespace StargateWorlds
                         //Display a list of all game objects in the Message Box area of the screen.
                         _gameConsoleView.DisplayListOfGameObjects();
                         break;
+                    case TravelerAction.ListNonplayerCharacters:
+                        //Display a list of all npc objects in the Message Box area of the screen.
+                        _gameConsoleView.DisplayListOfNpcObjects();
+                        break;
                     case TravelerAction.ListWorlds:
                         //Display a list of all the worlds in the universe in the Message Box area of the screen.
                         _gameConsoleView.DislayListOfWorlds();
@@ -180,6 +206,10 @@ namespace StargateWorlds
                         //Display the information for a specific object in the player's current location.
                         _gameConsoleView.DisplayGameObjectInfo();
                         break;
+                    case TravelerAction.NpcInformation:
+                        //Display an npc's information in the Message Box area of the screen.
+                        _gameConsoleView.DisplayNpcInformation();
+                        break;
                     case TravelerAction.PutDownObject:
                         //Pick up a game object and put it into inventory.
                         _gameUniverse.PutDownItem(_gameUniverse, _gameTraveler, _gameConsoleView);
@@ -187,6 +217,10 @@ namespace StargateWorlds
                     case TravelerAction.PickUpObject:
                         //Take a game object out of inventory and leave it on the current world.
                         _gameUniverse.PickupItem(_gameUniverse, _gameTraveler, _gameConsoleView);
+                        break;
+                    case TravelerAction.TalkToNpc:
+                        //Talk to a npc on the current world.
+                        _gameUniverse.TalkToNpc(_gameTraveler, _gameConsoleView);
                         break;
                     case TravelerAction.Travel:
                         planetDesignation = _gameConsoleView.GetWorldToTravelTo();
@@ -240,12 +274,15 @@ namespace StargateWorlds
                         break;
                     case TravelerAction.ReturnToMainMenu:
                         ActionMenu.currentMenu = ActionMenu.CurrentMenu.MainMenu;
-                        //_gameConsoleView.DisplayGamePlayScreen("Current Location", Text.LookAround(_gameUniverse.GetWorldByID(_gameTraveler.CurrentPlanet)), ActionMenu.MainMenu, "");
-                        _gameConsoleView.DisplayGamePlayScreen("Current Location", Text.LookAround(_gameUniverse.GetWorldByID(_gameTraveler.CurrentPlanet)) + " " + Text.GetWorldGameObjects(_gameUniverse.GetGameObjectsByWorld(_gameTraveler.CurrentPlanet)), ActionMenu.MainMenu, "");
+                        _gameConsoleView.DisplayGamePlayScreen("Current Location", Text.LookAround(_gameUniverse.GetWorldByID(_gameTraveler.CurrentPlanet)) + " " + Text.GetWorldGameObjects(_gameUniverse.GetGameObjectsByWorld(_gameTraveler.CurrentPlanet)) + " \n" + Text.GetWorldNpcObjects(_gameUniverse.GetNpcsByWorld(_gameTraveler.CurrentPlanet)), ActionMenu.MainMenu, "");
                         break;
                     case TravelerAction.TravelMenu:
                         ActionMenu.currentMenu = ActionMenu.CurrentMenu.TravelMenu;
                         _gameConsoleView.DisplayGamePlayScreen("Travel Menu", "Select an operation from the menu.", ActionMenu.TravelMenu, "");
+                        break;
+                    case TravelerAction.NpcMenu:
+                        ActionMenu.currentMenu = ActionMenu.CurrentMenu.NpcMenu;
+                        _gameConsoleView.DisplayGamePlayScreen("NPC Menu", "Select an operation from the menu.", ActionMenu.NpcMenu, "");
                         break;
                     default:
                         break;
@@ -270,11 +307,6 @@ namespace StargateWorlds
             _gameTraveler.Age = traveler.Age;
             _gameTraveler.Height = traveler.Height;
             _gameTraveler.Rank = traveler.Rank;
-            //_gameTraveler.Health = traveler.Health;
-            //_gameTraveler.GoldCoins = traveler.GoldCoins;
-            //_gameTraveler.IsLucky = traveler.IsLucky;
-            //_gameTraveler.IsQuick = traveler.IsQuick;
-
         }                
 
         /// <summary>
@@ -282,6 +314,15 @@ namespace StargateWorlds
         /// </summary>
         private void UpdateTravelerStats()
         {
+            //Variable Declarations.
+            GameObject trinium;
+            GameObject bombSpecs;
+            List<GameObject> gameObjects;
+            Random rnd = new Random();
+            string rndPlanetDesignation = "";
+            int rndworldNbr = UtilityLibrary.Misc.GetRandomInt(1, _gameUniverse.Worlds.Count);
+            Warrior jaffaNpc = new Warrior();
+
             //Clear the traveler stats in the Status Box.
             _gameConsoleView.ClearStatusBox();
 
@@ -291,24 +332,56 @@ namespace StargateWorlds
                 switch (_gameTraveler.CurrentPlanet)
                 {
                     case "P8X-362":   //Chulak (P8X-362)
-                        if(_gameTraveler.IsQuick == true)
+                        _gameConsoleView.DisplayGamePlayScreen("Ambush", "You have been ambushed by a small group of Jaffa soldiers not mentioned in the Tok'ra intelligence.  You manage to subdue the soldiers and continue into the installation.", ActionMenu.TravelMenu, "");
+
+                        //Loop through the list of npc's to find the jaffa soldiers npc.
+                        foreach (Npc gameNpc in _gameUniverse.Npc)
                         {
-                            _gameTraveler.UpdateTravelerHealth(Traveler.HealthChange.MinorInjury);
+                            if (gameNpc is Warrior)
+                            {
+                                jaffaNpc = gameNpc as Warrior;
+                            }
                         }
-                        else
-                        {
-                            _gameTraveler.UpdateTravelerHealth(Traveler.HealthChange.MajorInjury);
-                        }
+
+                        //Battle the traveler.
+                        _gameTraveler.UpdateTravelerHealth(jaffaNpc.Battle(_gameTraveler));
+                        break;
+                    case "P3X-974":   //Cimmeria (P3X-974)
+                        //Take the traveler to a random world.
+                        rndPlanetDesignation = _gameUniverse.Worlds[rndworldNbr].PlanetDesignation;
+                        _gameTraveler.CurrentPlanet = rndPlanetDesignation;
+                        _gameConsoleView.DisplayLookAround();
+                        _gameTraveler.AddVisitedWorld(rndPlanetDesignation, _gameUniverse.Worlds[rndworldNbr].CommonName);
+                        _gameTraveler.IsOnNewWorld = true;
+
+                        //Clear the traveler stats in the Status Box.
+                        _gameConsoleView.ClearStatusBox();
+
+                        //Add 15 gold coins.
+                        _gameTraveler.GoldCoins += 15;
+
+                        //Update the traveler's health.
+                        _gameTraveler.UpdateTravelerHealth(Traveler.HealthChange.MinorInjury);
+                        break;
+                    case "P2X-3YZ":   //Earth (P2X-3YZ)
+
+                        //Update the traveler's health.
+                        _gameTraveler.UpdateTravelerHealth(Traveler.HealthChange.FullHealing);
                         break;
                     case "P5C-768":   //Edora (P5C-768)
-                        if (_gameTraveler.IsLucky == true)
-                        {
-                            _gameTraveler.UpdateTravelerHealth(Traveler.HealthChange.MinorInjury);
-                        }
-                        else
-                        {
-                            _gameTraveler.UpdateTravelerHealth(Traveler.HealthChange.MajorInjury);
-                        }
+                        //Setup a timer for the player's cloaking device failing.
+                        Timer cloakFailTmr = new Timer();
+                        cloakFailTmr.Interval = 1500;   //1.5 seconds
+                        cloakFailTmr.AutoReset = false;
+                        cloakFailTmr.Elapsed += OnTimedEventCloak;
+                        cloakFailTmr.Start();
+
+                        //Setup a timer for the player being attacked.
+                        Timer attackTmr = new Timer();
+                        attackTmr.Interval = 10000;   //10 seconds
+                        attackTmr.AutoReset = false;
+                        attackTmr.Elapsed += OnTimedEventAttack;
+                        attackTmr.Start();
                         break;
                     case "P4A-771":   //Jebanna (P4A-771)
                         _gameTraveler.UpdateTravelerHealth(Traveler.HealthChange.PartialHealing);
@@ -323,16 +396,65 @@ namespace StargateWorlds
 
                 _gameTraveler.IsOnNewWorld = false;
             }
-
+            
             //Refresh the traveler stats in the Status Box.
             _gameConsoleView.DisplayStatusBox();
 
+            //Check for game objects that allow the player to win the game...
+            //Get a list of game objects for Earth.
+            gameObjects = _gameUniverse.GetGameObjectsByWorld("P2X-3YZ");
+
+            //Get the object information for Trinium and the Bomb Specs.
+            trinium = _gameUniverse.GetGameObjectByID(8);
+            bombSpecs = _gameUniverse.GetGameObjectByID(9);
+
+            //Check the game objects for Earth to see if the player has acquired the trinium and bomb specs.
+            if (gameObjects.Contains(trinium) && gameObjects.Contains(bombSpecs))
+            {
+                _gameConsoleView.DisplayGamePlayScreen("Game Over", "You Win!!  You have successfully retrieved the information and materials neccessary to save Earth!", ActionMenu.InitializeMission, "");
+                _playingGame = false;
+            }
+
+            //Check to see if the player is dead...
             //If the player is dead end the game.
             if (_gameTraveler.Health == Traveler.TravelerHealth.Dead)
             {
-                _gameConsoleView.DisplayGamePlayScreen("Game Over", "Game Over.  Thank you for playing.", ActionMenu.InitializeMission, "");
+                _gameConsoleView.DisplayGamePlayScreen("Game Over", "You have died (a.k.a. Game Over).  Thank you for playing.", ActionMenu.InitializeMission, "");
                 _playingGame = false;
             }
+        }
+
+        #endregion
+
+        #region EVENTS
+
+        private void OnTimedEventCloak(Object source, System.Timers.ElapsedEventArgs e)
+        {
+            _gameConsoleView.DisplayGamePlayScreen("Equipment Failure", "Your cloaking device has failed (one of the hazards of buying second hand equipment).  You are now visible to all in the power station.", ActionMenu.TravelMenu, "");
+
+        }
+
+        private void OnTimedEventAttack(Object source, System.Timers.ElapsedEventArgs e)
+        {
+            //Variable Declarations.
+            Warrior jaffaNpc = new Warrior();
+
+            //Display a message in the Message Box area of the screen telling the player they have been attacked.
+            _gameConsoleView.DisplayGamePlayScreen("Ambush", "You have been ambushed by a small group of Jaffa soldiers that help guard the power station.  You manage to subdue the soldiers and continue to where the Naquadria is stored.", ActionMenu.TravelMenu, "");
+
+            //Loop through the list of npc's to find the jaffa soldiers npc.
+            foreach (Npc gameNpc in _gameUniverse.Npc)
+            {
+                if (gameNpc is Warrior)
+                {
+                    jaffaNpc = gameNpc as Warrior;
+                }
+            }
+
+            //Battle the traveler.
+            _gameTraveler.UpdateTravelerHealth(jaffaNpc.Battle(_gameTraveler));
+            _gameConsoleView.ClearStatusBox();
+            _gameConsoleView.DisplayStatusBox();
         }
 
         #endregion
