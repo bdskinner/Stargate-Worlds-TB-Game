@@ -343,6 +343,9 @@ namespace StargateWorlds
                             }
                         }
 
+                        //Clear the traveler stats in the Status Box.
+                        _gameConsoleView.ClearStatusBox();
+
                         //Battle the traveler.
                         _gameTraveler.UpdateTravelerHealth(jaffaNpc.Battle(_gameTraveler));
                         break;
@@ -382,6 +385,7 @@ namespace StargateWorlds
                         attackTmr.AutoReset = false;
                         attackTmr.Elapsed += OnTimedEventAttack;
                         attackTmr.Start();
+
                         break;
                     case "P4A-771":   //Jebanna (P4A-771)
                         _gameTraveler.UpdateTravelerHealth(Traveler.HealthChange.PartialHealing);
@@ -442,6 +446,9 @@ namespace StargateWorlds
             //Display a message in the Message Box area of the screen telling the player they have been attacked.
             _gameConsoleView.DisplayGamePlayScreen("Ambush", "You have been ambushed by a small group of Jaffa soldiers that help guard the power station.  You manage to subdue the soldiers and continue to where the Naquadria is stored.", ActionMenu.TravelMenu, "");
 
+            //Clear the traveler stats in the Status Box.
+            _gameConsoleView.ClearStatusBox();
+
             //Loop through the list of npc's to find the jaffa soldiers npc.
             foreach (Npc gameNpc in _gameUniverse.Npc)
             {
@@ -453,7 +460,6 @@ namespace StargateWorlds
 
             //Battle the traveler.
             _gameTraveler.UpdateTravelerHealth(jaffaNpc.Battle(_gameTraveler));
-            _gameConsoleView.ClearStatusBox();
             _gameConsoleView.DisplayStatusBox();
         }
 
