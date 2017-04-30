@@ -174,7 +174,7 @@ namespace StargateWorlds
                     "the control room, where most of the staff of the station coordinate the operation of the plant.  The fuels used " +
                     "in the generation of power are housed in separate reinforced store rooms located in the basement of the facility. " +
                     " \n",
-                Accessable = true,
+                Accessable = false,
                 Visible = true,
                 RequiredObjects =
                 {
